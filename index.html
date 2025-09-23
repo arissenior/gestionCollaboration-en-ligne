@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CollabSpace - Plateforme de Collaboration Complète</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="script.js"></script>
+</head>
+<body>
+      <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-users"></i>
+                    <span>CollabSpace</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#accueil">Accueil</a></li>
+                    <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+                    <li><a href="#groupes">Groupes</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="header-controls">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <div class="auth-buttons" id="authButtons">
+                        <button class="login-btn" id="loginBtn">Connexion</button>
+                        <button class="signup-btn" id="signupBtn">Inscription</button>
+                    </div>
+                    <div class="user-menu" id="userMenu">
+                        <div class="user-avatar" id="userAvatar">JD</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">John Doe</span>
+                            <span class="user-role">Administrateur</span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="accueil">
+        <div class="container">
+            <h1>Collaborez efficacement en ligne</h1>
+            <p>Créez des groupes de travail, gérez des tâches et communiquez avec votre équipe en temps réel. Simplifiez votre collaboration à distance.</p>
+            <a href="#groupes" class="cta-button">Commencer maintenant</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="fonctionnalites">
+        <div class="container">
+            <div class="section-title">
+                <h2>Fonctionnalités principales</h2>
+                <p>Découvrez comment CollabSpace peut transformer votre façon de travailler en équipe</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>Gestion de groupes</h3>
+                    <p>Créez et gérez facilement vos groupes de travail avec des paramètres personnalisables.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3>Liste de tâches</h3>
+                    <p>Assignez des tâches, suivez leur progression et collaborez sur les projets en cours.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Messagerie intégrée</h3>
+                    <p>Communiquez en temps réel avec les membres de votre groupe grâce à notre système de chat.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h3>Partage de fichiers</h3>
+                    <p>Partagez et organisez vos documents, images et autres fichiers avec votre équipe.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>Calendrier partagé</h3>
+                    <p>Planifiez des réunions, des échéances et suivez les événements importants de votre projet.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Sécurité des données</h3>
+                    <p>Vos données sont cryptées et sauvegardées régulièrement pour une sécurité maximale.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Groups Section -->
+    <section class="groups" id="groupes">
+        <div class="container">
+            <div class="section-title">
+                <h2>Vos groupes de travail</h2>
+                <p>Rejoignez ou créez un groupe pour commencer à collaborer</p>
+            </div>
+            <div class="groups-container">
+                <div class="groups-sidebar">
+                    <h3>Mes groupes</h3>
+                    <ul class="group-list">
+                        <li class="active" data-group="projet-alpha"><i class="fas fa-project-diagram"></i> Projet Alpha</li>
+                        <li data-group="equipe-marketing"><i class="fas fa-chart-line"></i> Équipe Marketing</li>
+                        <li data-group="developpeurs-web"><i class="fas fa-code"></i> Développeurs Web</li>
+                        <li data-group="designers-ux"><i class="fas fa-palette"></i> Designers UX/UI</li>
+                    </ul>
+                    <button class="create-group-btn" id="createGroupBtn"><i class="fas fa-plus"></i> Créer un groupe</button>
+                </div>
+                <div class="group-content">
+                    <div class="group-header">
+                        <h2 id="groupTitle">Projet Alpha</h2>
+                        <div class="group-members">
+                            <span><i class="fas fa-users"></i> <span id="memberCount">8</span> membres</span>
+                        </div>
+                    </div>
+                    <div class="group-tabs">
+                        <button class="tab active" data-tab="tasks">Tâches</button>
+                        <button class="tab" data-tab="messages">Messages</button>
+                        <button class="tab" data-tab="files">Fichiers</button>
+                        <button class="tab" data-tab="calendar">Calendrier</button>
+                        <button class="tab" data-tab="members">Membres</button>
+                        <button class="tab" data-tab="settings">Paramètres</button>
+                    </div>
+                    
+                    <!-- Tâches Tab -->
+                    <div class="tab-content active" id="tasks">
+                        <h3>Tâches du groupe</h3>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-info">
+                                <h4>Concevoir la maquette</h4>
+                                <p>Assignée à: Mbewekam Gaelle • Échéance: 15/06/2023 • Priorité: Élevée</p>
+                            </div>
+                            <div class="task-actions">
+                                <button title="Modifier"><i class="fas fa-edit"></i></button>
+                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" checked>
+                            <div class="task-info">
+                                <h4>Rédiger le cahier des charges</h4>
+                                <p>Assignée à: Aristide Nna • Terminée</p>
+                            </div>
+                            <div class="task-actions">
+                                <button title="Modifier"><i class="fas fa-edit"></i></button>
+                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-info">
+                                <h4>Développer le module d'authentification</h4>
+                                <p>Assignée à: Massayo Darille • Échéance: 20/06/2023 • Priorité: Moyenne</p>
+                            </div>
+                            <div class="task-actions">
+                                <button title="Modifier"><i class="fas fa-edit"></i></button>
+                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="add-item-form">
+                            <input type="text" placeholder="Ajouter une nouvelle tâche..." id="newTaskInput">
+                            <button id="addTaskBtn"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    
+                    <!-- Messages Tab -->
+                    <div class="tab-content" id="messages">
+                        <h3>Messages du groupe</h3>
+                        <div class="message-item">
+                            <div class="message-info">
+                                <h4>Mbewekam Gaelle <span>10:25</span></h4>
+                                <p>J'ai terminé la première version de la maquette. Pouvez-vous la vérifier?</p>
+                            </div>
+                        </div>
+                        <div class="message-item">
+                            <div class="message-info">
+                                <h4>Aristide Nna <span>09:45</span></h4>
+                                <p>La réunion de suivi est prévue pour demain à 14h. N'oubliez pas!</p>
+                            </div>
+                        </div>
+                        <div class="message-item">
+                            <div class="message-info">
+                                <h4>Massayo Darille <span>Hier, 16:30</span></h4>
+                                <p>J'ai rencontré un problème avec l'API. Quelqu'un peut m'aider?</p>
+                            </div>
+                        </div>
+                        <div class="add-item-form">
+                            <textarea placeholder="Écrire un message..." id="newMessageInput" rows="2"></textarea>
+                            <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                    
+                    <!-- Fichiers Tab -->
+                    <div class="tab-content" id="files">
+                        <h3>Fichiers partagés</h3>
+                        <div class="file-item">
+                            <i class="fas fa-file-pdf" style="color: #e74c3c; font-size: 1.5rem; margin-right: 15px;"></i>
+                            <div class="file-info">
+                                <h4>Cahier des charges.pdf</h4>
+                                <p>Ajouté par: Aristide Nna • 12/05/2025 • 2.4 MB</p>
+                            </div>
+                            <div class="file-actions">
+                                <button title="Télécharger"><i class="fas fa-download"></i></button>
+                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="file-item">
+                            <i class="fas fa-file-image" style="color: #3498db; font-size: 1.5rem; margin-right: 15px;"></i>
+                            <div class="file-info">
+                                <h4>Maquette-v1.png</h4>
+                                <p>Ajouté par:Mbewekam Gaelle • 10/05/2023 • 1.8 MB</p>
+                            </div>
+                            <div class="file-actions">
+                                <button title="Télécharger"><i class="fas fa-download"></i></button>
+                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="file-item">
+                            <i class="fas fa-file-code" style="color: #f39c12; font-size: 1.5rem; margin-right: 15px;"></i>
+                            <div class="file-info">
+                                <h4>script-authentification.js</h4>
+                                <p>Ajouté par: Massayo Darille • 08/05/2023 • 156 KB</p>
+                            </div>
+                            <div class="file-actions">
+                                <button title="Télécharger"><i class="fas fa-download"></i></button>
+                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                        <div class="add-item-form">
+                            <input type="file" id="fileUpload">
+                            <button id="uploadFileBtn"><i class="fas fa-upload"></i> Téléverser</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Calendrier Tab -->
+                    <div class="tab-content" id="calendar">
+                        <h3>Calendrier du groupe - Juin 2023</h3>
+                        <div class="calendar">
+                            <div class="calendar-header">Lun</div>
+                            <div class="calendar-header">Mar</div>
+                            <div class="calendar-header">Mer</div>
+                            <div class="calendar-header">Jeu</div>
+                            <div class="calendar-header">Ven</div>
+                            <div class="calendar-header">Sam</div>
+                            <div class="calendar-header">Dim</div>
+                            
+                            <!-- Days will be populated by JavaScript -->
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <h4>Événements à venir</h4>
+                            <ul>
+                                <li>15 juin - Échéance: Maquette finale</li>
+                                <li>20 juin - Réunion d'équipe</li>
+                                <li>25 juin - Présentation client</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Membres Tab -->
+                    <div class="tab-content" id="members">
+                        <h3>Membres du groupe</h3>
+                        <div class="members-list">
+                            <div class="member-card">
+                                <div class="member-avatar">AN</div>
+                                <h4>Aristide Nna</h4>
+                                <p>Administrateur</p>
+                                <p>aristide@gmail.com</p>
+                            </div>
+                            <div class="member-card">
+                                <div class="member-avatar">MG</div>
+                                <h4>Mbewekam Gaelle</h4>
+                                <p>Membre</p>
+                                <p>mbewekam@gmail.com</p>
+                            </div>
+                            <div class="member-card">
+                                <div class="member-avatar">MD</div>
+                                <h4>Massayo Darile</h4>
+                                <p>Membre</p>
+                                <p>jean.martin@example.com</p>
+                            </div>
+                            <div class="member-card">
+                                <div class="member-avatar">HM</div>
+                                <h4>Aboubaker Hamidou</h4>
+                                <p>Membre</p>
+                                <p>aboubakarhamidou@gmail.com</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" style="margin-top: 20px;">Inviter un membre</button>
+                    </div>
+                    
+                    <!-- Paramètres Tab -->
+                    <div class="tab-content" id="settings">
+                        <h3>Paramètres du groupe</h3>
+                        <div class="form-group">
+                            <label for="groupName">Nom du groupe</label>
+                            <input type="text" id="groupName" value="Projet Alpha">
+                        </div>
+                        <div class="form-group">
+                            <label for="groupDescription">Description</label>
+                            <textarea id="groupDescription" rows="3">Groupe de travail pour le développement du projet Alpha</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="groupVisibility">Visibilité</label>
+                            <select id="groupVisibility">
+                                <option value="public">Public</option>
+                                <option value="private" selected>Privé</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notificationSettings">Notifications</label>
+                            <select id="notificationSettings">
+                                <option value="all">Toutes les notifications</option>
+                                <option value="mentions" selected>Seulement les mentions</option>
+                                <option value="none">Aucune notification</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn-secondary">Annuler</button>
+                            <button class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>CollabSpace</h3>
+                    <p>La plateforme de collaboration en ligne qui simplifie le travail d'équipe à distance.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Liens rapides</h3>
+                    <ul class="footer-links">
+                        <li><a href="#accueil">Accueil</a></li>
+                        <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+                        <li><a href="#groupes">Groupes</a></li>
+                        <li><a href="#">Tarifs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Centre d'aide</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> aristidenna@collabspace.com</li>
+                        <li><i class="fas fa-phone"></i> +237 6 97 40 26 28</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Douala, Cameroun</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 CollabSpace. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Connexion</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Se connecter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="signupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Inscription</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Nom complet</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Mot de passe</label>
+                    <input type="password" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirmer le mot de passe</label>
+                    <input type="password" id="signupConfirmPassword" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">S'inscrire</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="createGroupModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Créer un groupe</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="createGroupForm">
+                <div class="form-group">
+                    <label for="newGroupName">Nom du groupe</label>
+                    <input type="text" id="newGroupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="newGroupDescription">Description</label>
+                    <textarea id="newGroupDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="newGroupVisibility">Visibilité</label>
+                    <select id="newGroupVisibility">
+                        <option value="public">Public</option>
+                        <option value="private">Privé</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Créer le groupe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
