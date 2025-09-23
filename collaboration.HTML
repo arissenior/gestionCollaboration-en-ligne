@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CollabSpace - Plateforme de Collaboration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .auth-buttons button {
+            padding: 8px 20px;
+            border-radius: 5px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .login-btn {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary) !important;
+            margin-right: 10px;
+        }
+        
+        .signup-btn {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .auth-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+            color: white;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: 50px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        /* Groups Section */
+        .groups {
+            padding: 60px 0;
+            background-color: white;
+        }
+        
+        .groups-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .groups-sidebar {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .groups-sidebar h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .group-list {
+            list-style: none;
+        }
+        
+        .group-list li {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .group-list li:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .group-list li.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .group-list i {
+            margin-right: 10px;
+        }
+        
+        .create-group-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .create-group-btn:hover {
+            background: var(--secondary);
+        }
+        
+        .group-content {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .group-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 0 5px 5px 5px;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .task-item, .message-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        
+        .task-item:last-child, .message-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-checkbox {
+            margin-right: 15px;
+        }
+        
+        .task-info h4, .message-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .task-info p, .message-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .add-item-form {
+            margin-top: 20px;
+            display: flex;
+        }
+        
+        .add-item-form input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+        }
+        
+        .add-item-form button {
+            padding: 10px 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+            
+            .nav-links {
+                margin: 20px 0;
+            }
+            
+            .groups-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-users"></i>
+                    <span>CollabSpace</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#accueil">Accueil</a></li>
+                    <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+                    <li><a href="#groupes">Groupes</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="auth-buttons">
+                    <button class="login-btn">Connexion</button>
+                    <button class="signup-btn">Inscription</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="accueil">
+        <div class="container">
+            <h1>Collaborez efficacement en ligne</h1>
+            <p>Créez des groupes de travail, gérez des tâches et communiquez avec votre équipe en temps réel. Simplifiez votre collaboration à distance.</p>
+            <a href="#groupes" class="cta-button">Commencer maintenant</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="fonctionnalites">
+        <div class="container">
+            <div class="section-title">
+                <h2>Fonctionnalités principales</h2>
+                <p>Découvrez comment CollabSpace peut transformer votre façon de travailler en équipe</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>Gestion de groupes</h3>
+                    <p>Créez et gérez facilement vos groupes de travail avec des paramètres personnalisables.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3>Liste de tâches</h3>
+                    <p>Assignez des tâches, suivez leur progression et collaborez sur les projets en cours.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Messagerie intégrée</h3>
+                    <p>Communiquez en temps réel avec les membres de votre groupe grâce à notre système de chat.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Sécurité des données</h3>
+                    <p>Vos données sont cryptées et sauvegardées régulièrement pour une sécurité maximale.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Groups Section -->
+    <section class="groups" id="groupes">
+        <div class="container">
+            <div class="section-title">
+                <h2>Vos groupes de travail</h2>
+                <p>Rejoignez ou créez un groupe pour commencer à collaborer</p>
+            </div>
+            <div class="groups-container">
+                <div class="groups-sidebar">
+                    <h3>Mes groupes</h3>
+                    <ul class="group-list">
+                        <li class="active"><i class="fas fa-project-diagram"></i> Projet Alpha</li>
+                        <li><i class="fas fa-chart-line"></i> Équipe Marketing</li>
+                        <li><i class="fas fa-code"></i> Développeurs Web</li>
+                        <li><i class="fas fa-palette"></i> Designers UX/UI</li>
+                    </ul>
+                    <button class="create-group-btn"><i class="fas fa-plus"></i> Créer un groupe</button>
+                </div>
+                <div class="group-content">
+                    <div class="group-header">
+                        <h2>Projet Alpha</h2>
+                        <div class="group-members">
+                            <span><i class="fas fa-users"></i> 8 membres</span>
+                        </div>
+                    </div>
+                    <div class="group-tabs">
+                        <button class="tab active" data-tab="tasks">Tâches</button>
+                        <button class="tab" data-tab="messages">Messages</button>
+                        <button class="tab" data-tab="files">Fichiers</button>
+                        <button class="tab" data-tab="calendar">Calendrier</button>
+                    </div>
+                    <div class="tab-content active" id="tasks">
+                        <h3>Tâches du groupe</h3>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-info">
+                                <h4>Concevoir la maquette</h4>
+                                <p>Assignée à: Mbewekam gaelle • Échéance: 15/06/2023</p>
+                            </div>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox" checked>
+                            <div class="task-info">
+                                <h4>Rédiger le cahier des charges</h4>
+                                <p>Assignée à: Aristide Nna • Terminée</p>
+                            </div>
+                        </div>
+                        <div class="task-item">
+                            <input type="checkbox" class="task-checkbox">
+                            <div class="task-info">
+                                <h4>Développer le module d'authentification</h4>
+                                <p>Assignée à: Massayo Darille • Échéance: 20/06/2023</p>
+                            </div>
+                        </div>
+                        <div class="add-item-form">
+                            <input type="text" placeholder="Ajouter une nouvelle tâche...">
+                            <button><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="messages">
+                        <h3>Messages du groupe</h3>
+                        <div class="message-item">
+                            <div class="message-info">
+                                <h4>Mbewekam gaelle <span>10:25</span></h4>
+                                <p>J'ai terminé la première version de la maquette. Pouvez-vous la vérifier?</p>
+                            </div>
+                        </div>
+                        <div class="message-item">
+                            <div class="message-info">
+                                <h4>Aristide Nna<span>09:45</span></h4>
+                                <p>La réunion de suivi est prévue pour demain à 14h. N'oubliez pas!</p>
+                            </div>
+                        </div>
+                        <div class="message-item">
+                            <div class="message-info">
+                                <h4>Massayo Darille <span>Hier, 16:30</span></h4>
+                                <p>J'ai rencontré un problème avec l'API. Quelqu'un peut m'aider?</p>
+                            </div>
+                        </div>
+                        <div class="add-item-form">
+                            <input type="text" placeholder="Écrire un message...">
+                            <button><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="files">
+                        <h3>Fichiers partagés</h3>
+                        <p>Section des fichiers en cours de développement...</p>
+                    </div>
+                    <div class="tab-content" id="calendar">
+                        <h3>Calendrier du groupe</h3>
+                        <p>Section calendrier en cours de développement...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>CollabSpace</h3>
+                    <p>La plateforme de collaboration en ligne qui simplifie le travail d'équipe à distance.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Liens rapides</h3>
+                    <ul class="footer-links">
+                        <li><a href="#accueil">Accueil</a></li>
+                        <li><a href="#fonctionnalites">Fonctionnalités</a></li>
+                        <li><a href="#groupes">Groupes</a></li>
+                        <li><a href="#">Tarifs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Centre d'aide</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> contact@collabspace.com</li>
+                        <li><i class="fas fa-phone"></i> +237 6 97 40 26 28</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Douala, Cameroun</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 CollabSpace. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Gestion des onglets
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Retirer la classe active de tous les onglets et contenus
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Ajouter la classe active à l'onglet cliqué
+                tab.classList.add('active');
+                
+                // Afficher le contenu correspondant
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Gestion de la sélection des groupes
+        document.querySelectorAll('.group-list li').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.group-list li').forEach(li => li.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Ici, on pourrait charger les données du groupe sélectionné
+                document.querySelector('.group-content h2').textContent = item.textContent;
+            });
+        });
+        
+        // Gestion de l'ajout de nouvelles tâches
+        document.querySelector('#tasks .add-item-form button').addEventListener('click', () => {
+            const input = document.querySelector('#tasks .add-item-form input');
+            if (input.value.trim() !== '') {
+                const taskList = document.querySelector('#tasks');
+                const newTask = document.createElement('div');
+                newTask.className = 'task-item';
+                newTask.innerHTML = `
+                    <input type="checkbox" class="task-checkbox">
+                    <div class="task-info">
+                        <h4>${input.value}</h4>
+                        <p>Assignée à: Vous • Échéance: --/--/----</p>
+                    </div>
+                `;
+                taskList.insertBefore(newTask, document.querySelector('#tasks .add-item-form'));
+                input.value = '';
+            }
+        });
+        
+        // Gestion de l'ajout de nouveaux messages
+        document.querySelector('#messages .add-item-form button').addEventListener('click', () => {
+            const input = document.querySelector('#messages .add-item-form input');
+            if (input.value.trim() !== '') {
+                const messageList = document.querySelector('#messages');
+                const now = new Date();
+                const timeString = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+                
+                const newMessage = document.createElement('div');
+                newMessage.className = 'message-item';
+                newMessage.innerHTML = `
+                    <div class="message-info">
+                        <h4>Vous <span>${timeString}</span></h4>
+                        <p>${input.value}</p>
+                    </div>
+                `;
+                messageList.insertBefore(newMessage, document.querySelector('#messages .add-item-form'));
+                input.value = '';
+            }
+        });
+        
+        // Permettre l'ajout avec la touche Entrée
+        document.querySelectorAll('.add-item-form input').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.target.parentElement.querySelector('button').click();
+                }
+            });
+        });
+        
+        // Simulation de connexion
+        document.querySelector('.login-btn').addEventListener('click', () => {
+            alert('Fonctionnalité de connexion en cours de développement');
+        });
+        
+        document.querySelector('.signup-btn').addEventListener('click', () => {
+            alert('Fonctionnalité d\'inscription en cours de développement');
+        });
+        
+        document.querySelector('.create-group-btn').addEventListener('click', () => {
+            alert('Fonctionnalité de création de groupe en cours de développement');
+        });
+    </script>
+</body>
+</html>
