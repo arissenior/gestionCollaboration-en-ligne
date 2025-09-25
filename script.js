@@ -1,4 +1,4 @@
-  // État de l'application
+// État de l'application
         let currentUser = null;
         let isLoggedIn = false;
         let darkMode = false;
@@ -46,6 +46,16 @@
                 files: []
             }
         };
+
+        // Données de recherche
+        const searchData = [
+            { title: 'Projet Alpha', type: 'Groupe', description: 'Groupe de développement principal' },
+            { title: 'Maquette finale', type: 'Tâche', description: 'Concevoir la maquette utilisateur' },
+            { title: 'Cahier des charges', type: 'Fichier', description: 'Document de spécifications' },
+            { title: 'Réunion d\'équipe', type: 'Événement', description: 'Réunion hebdomadaire' },
+            { title: 'Équipe Marketing', type: 'Groupe', description: 'Groupe dédié au marketing' },
+            { title: 'Module d\'authentification', type: 'Tâche', description: 'Développer le système de connexion' }
+        ];
 
         // Initialisation de l'application
         document.addEventListener('DOMContentLoaded', function() {
@@ -102,6 +112,17 @@
 
             // Gestion du thème sombre
             document.getElementById('themeToggle').addEventListener('click', toggleDarkMode);
+
+            // Gestion du menu mobile
+            document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+
+            // Gestion de la recherche
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            document.getElementById('searchInput').addEventListener('focus', showSearchResults);
+            document.getElementById('searchInput').addEventListener('blur', hideSearchResults);
+
+            // Validation en temps réel des formulaires
+            setupFormValidation();
 
             // Initialiser le calendrier
             initializeCalendar();
@@ -303,12 +324,36 @@
             document.querySelectorAll('.modal').forEach(modal => {
                 modal.style.display = 'none';
             });
+            
+            // Réinitialiser les formulaires
+            document.querySelectorAll('form').forEach(form => {
+                form.reset();
+                // Réinitialiser les états d'erreur
+                form.querySelectorAll('.form-group').forEach(group => {
+                    group.classList.remove('error');
+                });
+            });
         }
 
         function handleLogin(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
+            
+            // Validation
+            let isValid = true;
+            
+            if (!validateEmail(email)) {
+                document.getElementById('loginEmail').parentElement.classList.add('error');
+                isValid = false;
+            }
+            
+            if (password.length < 1) {
+                document.getElementById('loginPassword').parentElement.classList.add('error');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
             
             // Simulation de connexion
             if (email && password) {
@@ -320,9 +365,9 @@
                 isLoggedIn = true;
                 updateUIAfterLogin();
                 closeModal();
-                alert('Connexion réussie!');
+                showNotification('Connexion réussie!', 'success');
             } else {
-                alert('Veuillez remplir tous les champs.');
+                showNotification('Veuillez remplir tous les champs.', 'error');
             }
         }
 
@@ -333,10 +378,30 @@
             const password = document.getElementById('signupPassword').value;
             const confirmPassword = document.getElementById('signupConfirmPassword').value;
             
-            if (password !== confirmPassword) {
-                alert('Les mots de passe ne correspondent pas.');
-                return;
+            // Validation
+            let isValid = true;
+            
+            if (name.length < 2) {
+                document.getElementById('signupName').parentElement.classList.add('error');
+                isValid = false;
             }
+            
+            if (!validateEmail(email)) {
+                document.getElementById('signupEmail').parentElement.classList.add('error');
+                isValid = false;
+            }
+            
+            if (password.length < 8) {
+                document.getElementById('signupPassword').parentElement.classList.add('error');
+                isValid = false;
+            }
+            
+            if (password !== confirmPassword) {
+                document.getElementById('signupConfirmPassword').parentElement.classList.add('error');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
             
             // Simulation d'inscription
             if (name && email && password) {
@@ -348,9 +413,9 @@
                 isLoggedIn = true;
                 updateUIAfterLogin();
                 closeModal();
-                alert('Inscription réussie! Bienvenue sur CollabSpace.');
+                showNotification('Inscription réussie! Bienvenue sur CollabSpace.', 'success');
             } else {
-                alert('Veuillez remplir tous les champs.');
+                showNotification('Veuillez remplir tous les champs.', 'error');
             }
         }
 
@@ -359,6 +424,12 @@
             const name = document.getElementById('newGroupName').value;
             const description = document.getElementById('newGroupDescription').value;
             const visibility = document.getElementById('newGroupVisibility').value;
+            
+            // Validation
+            if (name.length < 2) {
+                document.getElementById('newGroupName').parentElement.classList.add('error');
+                return;
+            }
             
             if (name) {
                 // Ajouter le nouveau groupe aux données
@@ -387,12 +458,9 @@
                 });
                 
                 closeModal();
-                alert('Groupe créé avec succès!');
-                
-                // Réinitialiser le formulaire
-                document.getElementById('createGroupForm').reset();
+                showNotification('Groupe créé avec succès!', 'success');
             } else {
-                alert('Veuillez saisir un nom pour le groupe.');
+                showNotification('Veuillez saisir un nom pour le groupe.', 'error');
             }
         }
 
@@ -409,20 +477,23 @@
             document.getElementById('createGroupBtn').disabled = false;
             document.querySelectorAll('.add-item-form input, .add-item-form textarea, .add-item-form button').forEach(el => {
                 el.disabled = false;
+                if (el.placeholder.includes('Veuillez vous connecter')) {
+                    el.placeholder = el.placeholder.replace('Veuillez vous connecter pour utiliser cette fonctionnalité', '');
+                }
             });
+            
+            // Sauvegarder l'état de connexion
+            localStorage.setItem('collabspace_loggedIn', 'true');
+            localStorage.setItem('collabspace_user', JSON.stringify(currentUser));
         }
 
         function checkLoginStatus() {
             // Simulation: vérifier si l'utilisateur est connecté
-            // Dans une vraie application, cela vérifierait les cookies/tokens
             const loggedIn = localStorage.getItem('collabspace_loggedIn');
+            const userData = localStorage.getItem('collabspace_user');
             
-            if (loggedIn === 'true') {
-                currentUser = {
-                    name: 'John Doe',
-                    email: 'john.doe@example.com',
-                    avatar: 'JD'
-                };
+            if (loggedIn === 'true' && userData) {
+                currentUser = JSON.parse(userData);
                 isLoggedIn = true;
                 updateUIAfterLogin();
             } else {
@@ -430,7 +501,9 @@
                 document.getElementById('createGroupBtn').disabled = true;
                 document.querySelectorAll('.add-item-form input, .add-item-form textarea, .add-item-form button').forEach(el => {
                     el.disabled = true;
-                    el.placeholder = 'Veuillez vous connecter pour utiliser cette fonctionnalité';
+                    if (!el.placeholder.includes('Veuillez vous connecter')) {
+                        el.placeholder = 'Veuillez vous connecter pour utiliser cette fonctionnalité';
+                    }
                 });
             }
         }
@@ -451,6 +524,159 @@
             
             // Sauvegarder la préférence
             localStorage.setItem('collabspace_darkMode', darkMode);
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase();
+            const resultsContainer = document.getElementById('searchResults');
+            
+            if (query.length < 2) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            
+            const filteredResults = searchData.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                item.description.toLowerCase().includes(query)
+            );
+            
+            displaySearchResults(filteredResults);
+        }
+
+        function displaySearchResults(results) {
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = '';
+            
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<div class="search-result-item">Aucun résultat trouvé</div>';
+            } else {
+                results.forEach(result => {
+                    const resultElement = document.createElement('div');
+                    resultElement.className = 'search-result-item';
+                    resultElement.innerHTML = `
+                        <div><strong>${result.title}</strong> - ${result.type}</div>
+                        <div style="font-size: 0.8rem; color: var(--gray);">${result.description}</div>
+                    `;
+                    resultsContainer.appendChild(resultElement);
+                });
+            }
+            
+            resultsContainer.style.display = 'block';
+        }
+
+        function showSearchResults() {
+            const query = document.getElementById('searchInput').value;
+            if (query.length >= 2) {
+                document.getElementById('searchResults').style.display = 'block';
+            }
+        }
+
+        function hideSearchResults() {
+            // Petit délai pour permettre le clic sur un résultat
+            setTimeout(() => {
+                document.getElementById('searchResults').style.display = 'none';
+            }, 200);
+        }
+
+        function setupFormValidation() {
+            // Validation en temps réel pour le formulaire de connexion
+            document.getElementById('loginEmail').addEventListener('input', function() {
+                if (validateEmail(this.value)) {
+                    this.parentElement.classList.remove('error');
+                }
+            });
+            
+            document.getElementById('loginPassword').addEventListener('input', function() {
+                if (this.value.length >= 1) {
+                    this.parentElement.classList.remove('error');
+                }
+            });
+            
+            // Validation en temps réel pour le formulaire d'inscription
+            document.getElementById('signupName').addEventListener('input', function() {
+                if (this.value.length >= 2) {
+                    this.parentElement.classList.remove('error');
+                }
+            });
+            
+            document.getElementById('signupEmail').addEventListener('input', function() {
+                if (validateEmail(this.value)) {
+                    this.parentElement.classList.remove('error');
+                }
+            });
+            
+            document.getElementById('signupPassword').addEventListener('input', function() {
+                if (this.value.length >= 8) {
+                    this.parentElement.classList.remove('error');
+                }
+            });
+            
+            document.getElementById('signupConfirmPassword').addEventListener('input', function() {
+                const password = document.getElementById('signupPassword').value;
+                if (this.value === password) {
+                    this.parentElement.classList.remove('error');
+                }
+            });
+            
+            // Validation en temps réel pour le formulaire de création de groupe
+            document.getElementById('newGroupName').addEventListener('input', function() {
+                if (this.value.length >= 2) {
+                    this.parentElement.classList.remove('error');
+                }
+            });
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function showNotification(message, type) {
+            // Créer une notification temporaire
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 5px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                box-shadow: var(--shadow);
+                transition: var(--transition);
+                transform: translateX(100%);
+            `;
+            
+            if (type === 'success') {
+                notification.style.backgroundColor = '#28a745';
+            } else {
+                notification.style.backgroundColor = '#dc3545';
+            }
+            
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check' : 'exclamation-triangle'}" style="margin-right: 8px;"></i>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animation d'entrée
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Animation de sortie après 3 secondes
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
         }
 
         function initializeCalendar() {
@@ -524,3 +750,11 @@
             document.querySelector('#themeToggle i').classList.remove('fa-moon');
             document.querySelector('#themeToggle i').classList.add('fa-sun');
         }
+
+        // Fermer le menu mobile en cliquant sur un lien
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('navLinks').classList.remove('active');
+            });
+        });
+  
