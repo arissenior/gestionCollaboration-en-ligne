@@ -1,7 +1,8 @@
-// État de l'application
+ // État de l'application
         let currentUser = null;
         let isLoggedIn = false;
         let darkMode = false;
+        let isAdmin = false;
 
         // Données des groupes
         const groupsData = {
@@ -71,11 +72,37 @@
                 });
             });
 
+            // Gestion des onglets admin
+            document.querySelectorAll('.admin-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchAdminTab(tabId);
+                });
+            });
+
             // Gestion de la sélection des groupes
             document.querySelectorAll('.group-list li').forEach(item => {
-                item.addEventListener('click', () => {
+                item.addEventListener('click', (e) => {
+                    // Ne pas déclencher la sélection si on clique sur les boutons d'action
+                    if (e.target.closest('.group-actions')) return;
+                    
                     const groupId = item.getAttribute('data-group');
                     selectGroup(groupId);
+                });
+            });
+
+            // Gestion des boutons d'action des groupes
+            document.querySelectorAll('.group-action-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const groupItem = this.closest('li');
+                    const groupId = groupItem.getAttribute('data-group');
+                    
+                    if (this.querySelector('.fa-edit')) {
+                        editGroup(groupId);
+                    } else if (this.querySelector('.fa-trash')) {
+                        deleteGroup(groupId);
+                    }
                 });
             });
 
@@ -95,6 +122,9 @@
                     sendMessage();
                 }
             });
+
+            // Gestion du téléversement de fichiers
+            document.getElementById('uploadFileBtn').addEventListener('click', uploadFile);
 
             // Gestion des modales
             document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
@@ -121,6 +151,17 @@
             document.getElementById('searchInput').addEventListener('focus', showSearchResults);
             document.getElementById('searchInput').addEventListener('blur', hideSearchResults);
 
+            // Gestion du menu utilisateur
+            document.getElementById('userAvatar').addEventListener('click', toggleUserDropdown);
+
+            // Gestion de la déconnexion
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+            // Gestion de la navigation admin
+            document.querySelectorAll('.admin-nav').forEach(link => {
+                link.addEventListener('click', showAdminSection);
+            });
+
             // Validation en temps réel des formulaires
             setupFormValidation();
 
@@ -138,6 +179,18 @@
             
             // Ajouter la classe active à l'onglet cliqué
             document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
+            
+            // Afficher le contenu correspondant
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function switchAdminTab(tabId) {
+            // Retirer la classe active de tous les onglets et contenus admin
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
+            
+            // Ajouter la classe active à l'onglet cliqué
+            document.querySelector(`.admin-tab[data-tab="${tabId}"]`).classList.add('active');
             
             // Afficher le contenu correspondant
             document.getElementById(tabId).classList.add('active');
@@ -161,6 +214,34 @@
             
             // Mettre à jour les fichiers
             updateFilesDisplay(group.files);
+        }
+
+        function editGroup(groupId) {
+            const group = groupsData[groupId];
+            showNotification(`Modification du groupe "${group.name}"`, 'warning');
+        }
+
+        function deleteGroup(groupId) {
+            const group = groupsData[groupId];
+            if (confirm(`Êtes-vous sûr de vouloir supprimer le groupe "${group.name}" ?`)) {
+                delete groupsData[groupId];
+                document.querySelector(`.group-list li[data-group="${groupId}"]`).remove();
+                showNotification(`Groupe "${group.name}" supprimé avec succès`, 'success');
+                
+                // Sélectionner le premier groupe disponible
+                const firstGroup = document.querySelector('.group-list li');
+                if (firstGroup) {
+                    const firstGroupId = firstGroup.getAttribute('data-group');
+                    selectGroup(firstGroupId);
+                } else {
+                    // Aucun groupe restant
+                    document.getElementById('groupTitle').textContent = 'Aucun groupe';
+                    document.getElementById('memberCount').textContent = '0';
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.innerHTML = '<p>Aucun groupe disponible. Créez un nouveau groupe pour commencer.</p>';
+                    });
+                }
+            }
         }
 
         function updateTasksDisplay(tasks) {
@@ -193,8 +274,31 @@
             // Ajouter les écouteurs d'événements pour les nouvelles tâches
             document.querySelectorAll('.task-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
-                    // Mettre à jour l'état de la tâche dans les données
-                    // (implémentation simplifiée)
+                    const taskItem = this.closest('.task-item');
+                    const taskTitle = taskItem.querySelector('h4').textContent;
+                    
+                    if (this.checked) {
+                        showNotification(`Tâche "${taskTitle}" marquée comme terminée`, 'success');
+                    } else {
+                        showNotification(`Tâche "${taskTitle}" marquée comme non terminée`, 'warning');
+                    }
+                });
+            });
+            
+            // Ajouter les écouteurs d'événements pour les boutons d'action des tâches
+            document.querySelectorAll('.task-actions button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const taskItem = this.closest('.task-item');
+                    const taskTitle = taskItem.querySelector('h4').textContent;
+                    
+                    if (this.querySelector('.fa-edit')) {
+                        showNotification(`Modification de la tâche "${taskTitle}"`, 'warning');
+                    } else if (this.querySelector('.fa-trash')) {
+                        if (confirm(`Êtes-vous sûr de vouloir supprimer la tâche "${taskTitle}" ?`)) {
+                            taskItem.remove();
+                            showNotification(`Tâche "${taskTitle}" supprimée avec succès`, 'success');
+                        }
+                    }
                 });
             });
         }
@@ -266,6 +370,23 @@
             
             // Réajouter le formulaire d'ajout
             filesContainer.appendChild(addForm);
+            
+            // Ajouter les écouteurs d'événements pour les boutons d'action des fichiers
+            document.querySelectorAll('.file-actions button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const fileItem = this.closest('.file-item');
+                    const fileName = fileItem.querySelector('h4').textContent;
+                    
+                    if (this.querySelector('.fa-download')) {
+                        showNotification(`Téléchargement du fichier "${fileName}"`, 'success');
+                    } else if (this.querySelector('.fa-trash')) {
+                        if (confirm(`Êtes-vous sûr de vouloir supprimer le fichier "${fileName}" ?`)) {
+                            fileItem.remove();
+                            showNotification(`Fichier "${fileName}" supprimé avec succès`, 'success');
+                        }
+                    }
+                });
+            });
         }
 
         function addNewTask() {
@@ -287,6 +408,7 @@
                 groupsData[currentGroup].tasks.push(newTask);
                 updateTasksDisplay(groupsData[currentGroup].tasks);
                 input.value = '';
+                showNotification('Tâche ajoutée avec succès', 'success');
             }
         }
 
@@ -309,10 +431,22 @@
                 groupsData[currentGroup].messages.push(newMessage);
                 updateMessagesDisplay(groupsData[currentGroup].messages);
                 input.value = '';
+                showNotification('Message envoyé', 'success');
                 
                 // Faire défiler vers le bas pour voir le nouveau message
                 const messagesContainer = document.getElementById('messages');
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        function uploadFile() {
+            const fileInput = document.getElementById('fileUpload');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                showNotification(`Fichier "${file.name}" téléversé avec succès`, 'success');
+                fileInput.value = '';
+            } else {
+                showNotification('Veuillez sélectionner un fichier', 'error');
             }
         }
 
@@ -357,15 +491,27 @@
             
             // Simulation de connexion
             if (email && password) {
+                // Vérifier si c'est un compte admin
+                isAdmin = email === 'admin@collabspace.com';
+                
                 currentUser = {
-                    name: 'John Doe',
+                    name: isAdmin ? 'Admin CollabSpace' : 'John Doe',
                     email: email,
-                    avatar: 'JD'
+                    avatar: isAdmin ? 'AC' : 'JD',
+                    role: isAdmin ? 'Administrateur' : 'Utilisateur'
                 };
+                
                 isLoggedIn = true;
                 updateUIAfterLogin();
                 closeModal();
                 showNotification('Connexion réussie!', 'success');
+                
+                // Rediriger vers l'admin si c'est un admin
+                if (isAdmin) {
+                    setTimeout(() => {
+                        showAdminSection();
+                    }, 1000);
+                }
             } else {
                 showNotification('Veuillez remplir tous les champs.', 'error');
             }
@@ -408,7 +554,8 @@
                 currentUser = {
                     name: name,
                     email: email,
-                    avatar: name.split(' ').map(n => n[0]).join('').toUpperCase()
+                    avatar: name.split(' ').map(n => n[0]).join('').toUpperCase(),
+                    role: 'Utilisateur'
                 };
                 isLoggedIn = true;
                 updateUIAfterLogin();
@@ -445,20 +592,47 @@
                 };
                 
                 // Ajouter le groupe à la liste
-                const groupList = document.querySelector('.group-list');
+                const groupList = document.getElementById('groupList');
                 const newGroupItem = document.createElement('li');
                 newGroupItem.setAttribute('data-group', groupId);
-                newGroupItem.innerHTML = `<i class="fas fa-users"></i> ${name}`;
+                newGroupItem.innerHTML = `
+                    <div>
+                        <i class="fas fa-users"></i> ${name}
+                    </div>
+                    <div class="group-actions">
+                        <button class="group-action-btn" title="Modifier"><i class="fas fa-edit"></i></button>
+                        <button class="group-action-btn" title="Supprimer"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
                 groupList.appendChild(newGroupItem);
                 
                 // Ajouter l'écouteur d'événements au nouveau groupe
-                newGroupItem.addEventListener('click', function() {
+                newGroupItem.addEventListener('click', function(e) {
+                    if (e.target.closest('.group-actions')) return;
                     const groupId = this.getAttribute('data-group');
                     selectGroup(groupId);
                 });
                 
+                // Ajouter les écouteurs d'événements aux boutons d'action
+                newGroupItem.querySelectorAll('.group-action-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const groupItem = this.closest('li');
+                        const groupId = groupItem.getAttribute('data-group');
+                        
+                        if (this.querySelector('.fa-edit')) {
+                            editGroup(groupId);
+                        } else if (this.querySelector('.fa-trash')) {
+                            deleteGroup(groupId);
+                        }
+                    });
+                });
+                
                 closeModal();
                 showNotification('Groupe créé avec succès!', 'success');
+                
+                // Réinitialiser le formulaire
+                document.getElementById('createGroupForm').reset();
             } else {
                 showNotification('Veuillez saisir un nom pour le groupe.', 'error');
             }
@@ -472,12 +646,21 @@
             document.getElementById('userMenu').style.display = 'flex';
             document.getElementById('userName').textContent = currentUser.name;
             document.getElementById('userAvatar').textContent = currentUser.avatar;
+            document.querySelector('.user-role').textContent = currentUser.role;
+            
+            // Afficher les éléments admin si l'utilisateur est admin
+            if (isAdmin) {
+                document.querySelectorAll('.admin-nav').forEach(el => {
+                    el.style.display = 'flex';
+                });
+                document.querySelector('.user-role').innerHTML = 'Administrateur <span class="admin-badge">ADMIN</span>';
+            }
             
             // Activer les fonctionnalités réservées aux utilisateurs connectés
             document.getElementById('createGroupBtn').disabled = false;
-            document.querySelectorAll('.add-item-form input, .add-item-form textarea, .add-item-form button').forEach(el => {
+            document.querySelectorAll('.add-item-form input, .add-item-form textarea, .add-item-form button, .add-item-form select').forEach(el => {
                 el.disabled = false;
-                if (el.placeholder.includes('Veuillez vous connecter')) {
+                if (el.placeholder && el.placeholder.includes('Veuillez vous connecter')) {
                     el.placeholder = el.placeholder.replace('Veuillez vous connecter pour utiliser cette fonctionnalité', '');
                 }
             });
@@ -485,23 +668,26 @@
             // Sauvegarder l'état de connexion
             localStorage.setItem('collabspace_loggedIn', 'true');
             localStorage.setItem('collabspace_user', JSON.stringify(currentUser));
+            localStorage.setItem('collabspace_isAdmin', isAdmin.toString());
         }
 
         function checkLoginStatus() {
             // Simulation: vérifier si l'utilisateur est connecté
             const loggedIn = localStorage.getItem('collabspace_loggedIn');
             const userData = localStorage.getItem('collabspace_user');
+            const adminStatus = localStorage.getItem('collabspace_isAdmin');
             
             if (loggedIn === 'true' && userData) {
                 currentUser = JSON.parse(userData);
                 isLoggedIn = true;
+                isAdmin = adminStatus === 'true';
                 updateUIAfterLogin();
             } else {
                 // Désactiver certaines fonctionnalités pour les utilisateurs non connectés
                 document.getElementById('createGroupBtn').disabled = true;
-                document.querySelectorAll('.add-item-form input, .add-item-form textarea, .add-item-form button').forEach(el => {
+                document.querySelectorAll('.add-item-form input, .add-item-form textarea, .add-item-form button, .add-item-form select').forEach(el => {
                     el.disabled = true;
-                    if (!el.placeholder.includes('Veuillez vous connecter')) {
+                    if (el.placeholder && !el.placeholder.includes('Veuillez vous connecter')) {
                         el.placeholder = 'Veuillez vous connecter pour utiliser cette fonctionnalité';
                     }
                 });
@@ -528,6 +714,66 @@
 
         function toggleMobileMenu() {
             document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        function toggleUserDropdown() {
+            document.getElementById('userDropdown').classList.toggle('active');
+        }
+
+        function handleLogout() {
+            isLoggedIn = false;
+            isAdmin = false;
+            currentUser = null;
+            
+            // Masquer le menu utilisateur
+            document.getElementById('userMenu').style.display = 'none';
+            
+            // Afficher les boutons d'authentification
+            document.getElementById('authButtons').style.display = 'block';
+            
+            // Masquer les éléments admin
+            document.querySelectorAll('.admin-nav').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Désactiver les fonctionnalités réservées aux utilisateurs connectés
+            document.getElementById('createGroupBtn').disabled = true;
+            document.querySelectorAll('.add-item-form input, .add-item-form textarea, .add-item-form button').forEach(el => {
+                el.disabled = true;
+                if (el.placeholder && !el.placeholder.includes('Veuillez vous connecter')) {
+                    el.placeholder = 'Veuillez vous connecter pour utiliser cette fonctionnalité';
+                }
+            });
+            
+            // Masquer la section admin si elle est visible
+            document.getElementById('admin').style.display = 'none';
+            
+            // Supprimer les données de connexion
+            localStorage.removeItem('collabspace_loggedIn');
+            localStorage.removeItem('collabspace_user');
+            localStorage.removeItem('collabspace_isAdmin');
+            
+            showNotification('Déconnexion réussie', 'success');
+        }
+
+        function showAdminSection(e) {
+            if (e) e.preventDefault();
+            
+            if (!isAdmin) {
+                showNotification('Accès réservé aux administrateurs', 'error');
+                return;
+            }
+            
+            // Masquer les autres sections
+            document.querySelectorAll('section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Afficher la section admin
+            document.getElementById('admin').style.display = 'block';
+            
+            // Scroller vers le haut
+            window.scrollTo(0, 0);
         }
 
         function handleSearch(e) {
@@ -638,28 +884,9 @@
         function showNotification(message, type) {
             // Créer une notification temporaire
             const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 20px;
-                border-radius: 5px;
-                color: white;
-                font-weight: 500;
-                z-index: 10000;
-                box-shadow: var(--shadow);
-                transition: var(--transition);
-                transform: translateX(100%);
-            `;
-            
-            if (type === 'success') {
-                notification.style.backgroundColor = '#28a745';
-            } else {
-                notification.style.backgroundColor = '#dc3545';
-            }
-            
+            notification.className = `notification ${type}`;
             notification.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check' : 'exclamation-triangle'}" style="margin-right: 8px;"></i>
+                <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
                 ${message}
             `;
             
@@ -667,12 +894,12 @@
             
             // Animation d'entrée
             setTimeout(() => {
-                notification.style.transform = 'translateX(0)';
+                notification.classList.add('show');
             }, 100);
             
             // Animation de sortie après 3 secondes
             setTimeout(() => {
-                notification.style.transform = 'translateX(100%)';
+                notification.classList.remove('show');
                 setTimeout(() => {
                     document.body.removeChild(notification);
                 }, 300);
@@ -716,6 +943,11 @@
                 if (i === 15 || i === 20 || i === 25) {
                     dayElement.classList.add('has-event');
                     dayElement.title = 'Événement ce jour';
+                    
+                    // Ajouter un événement au clic
+                    dayElement.addEventListener('click', function() {
+                        showNotification(`Événement du ${i} juin: Réunion d'équipe`, 'success');
+                    });
                 }
                 
                 calendar.appendChild(dayElement);
@@ -740,6 +972,11 @@
                     closeModal();
                 }
             });
+            
+            // Fermer le dropdown utilisateur en cliquant à l'extérieur
+            if (!e.target.closest('.user-menu')) {
+                document.getElementById('userDropdown').classList.remove('active');
+            }
         });
 
         // Vérifier la préférence de mode sombre au chargement
@@ -757,4 +994,38 @@
                 document.getElementById('navLinks').classList.remove('active');
             });
         });
-  
+
+        // Gestion des boutons dans la section membres
+        document.querySelectorAll('.member-actions button').forEach(button => {
+            button.addEventListener('click', function() {
+                const memberCard = this.closest('.member-card');
+                const memberName = memberCard.querySelector('h4').textContent;
+                
+                if (this.querySelector('.fa-envelope')) {
+                    showNotification(`Message envoyé à ${memberName}`, 'success');
+                } else if (this.querySelector('.fa-user-times')) {
+                    if (confirm(`Êtes-vous sûr de vouloir retirer ${memberName} du groupe ?`)) {
+                        showNotification(`${memberName} a été retiré du groupe`, 'success');
+                    }
+                }
+            });
+        });
+
+        // Gestion des boutons dans le panneau d'administration
+        document.querySelectorAll('.admin-table .btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const row = this.closest('tr');
+                const name = row.querySelector('td:first-child').textContent;
+                
+                if (this.querySelector('.fa-edit')) {
+                    showNotification(`Modification de ${name}`, 'warning');
+                } else if (this.querySelector('.fa-trash')) {
+                    if (confirm(`Êtes-vous sûr de vouloir supprimer ${name} ?`)) {
+                        row.remove();
+                        showNotification(`${name} a été supprimé`, 'success');
+                    }
+                }
+            });
+        });
+
+        // Pour tester l'accès admin, utilisez l'email: admin@collabspace.com (mot de passe:FFF)

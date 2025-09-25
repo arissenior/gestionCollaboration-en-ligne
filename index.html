@@ -9,7 +9,7 @@
     <script type="module" src="script.js"></script>
 </head>
 <body>
-     <!-- Header -->
+      <!-- Header -->
     <header>
         <div class="container">
             <nav class="navbar">
@@ -26,6 +26,7 @@
                     <li><a href="#accueil"><i class="fas fa-home"></i> Accueil</a></li>
                     <li><a href="#fonctionnalites"><i class="fas fa-star"></i> Fonctionnalités</a></li>
                     <li><a href="#groupes"><i class="fas fa-layer-group"></i> Groupes</a></li>
+                    <li><a href="#admin" class="admin-nav" style="display: none;"><i class="fas fa-crown"></i> Administration</a></li>
                     <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
                 </ul>
                 
@@ -50,6 +51,12 @@
                         <div class="user-info">
                             <span class="user-name" id="userName">John Doe</span>
                             <span class="user-role">Administrateur</span>
+                        </div>
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="#profile"><i class="fas fa-user"></i> Mon profil</a>
+                            <a href="#settings"><i class="fas fa-cog"></i> Paramètres</a>
+                            <a href="#admin" class="admin-nav" style="display: none;"><i class="fas fa-crown"></i> Administration</a>
+                            <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
                         </div>
                     </div>
                 </div>
@@ -130,12 +137,43 @@
             <div class="groups-container">
                 <div class="groups-sidebar">
                     <h3>Mes groupes</h3>
-                    <ul class="group-list">
-                        <li class="active" data-group="projet-alpha"><i class="fas fa-project-diagram"></i> Projet Alpha</li>
-                        <li data-group="equipe-marketing"><i class="fas fa-chart-line"></i> Équipe Marketing</li>
-                        <li data-group="developpeurs-web"><i class="fas fa-code"></i> Développeurs Web</li>
-                        <li data-group="designers-ux"><i class="fas fa-palette"></i> Designers UX/UI</li>
-                        <li data-group="designers-ux"><i class="fas fa-palette"></i> Ingenieur DevOps</li>
+                    <ul class="group-list" id="groupList">
+                        <li class="active" data-group="projet-alpha">
+                            <div>
+                                <i class="fas fa-project-diagram"></i> Projet Alpha
+                            </div>
+                            <div class="group-actions">
+                                <button class="group-action-btn" title="Modifier"><i class="fas fa-edit"></i></button>
+                                <button class="group-action-btn" title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                        <li data-group="equipe-marketing">
+                            <div>
+                                <i class="fas fa-chart-line"></i> Équipe Marketing
+                            </div>
+                            <div class="group-actions">
+                                <button class="group-action-btn" title="Modifier"><i class="fas fa-edit"></i></button>
+                                <button class="group-action-btn" title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                        <li data-group="developpeurs-web">
+                            <div>
+                                <i class="fas fa-code"></i> Développeurs Web
+                            </div>
+                            <div class="group-actions">
+                                <button class="group-action-btn" title="Modifier"><i class="fas fa-edit"></i></button>
+                                <button class="group-action-btn" title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                        <li data-group="designers-ux">
+                            <div>
+                                <i class="fas fa-palette"></i> Designers UX/UI
+                            </div>
+                            <div class="group-actions">
+                                <button class="group-action-btn" title="Modifier"><i class="fas fa-edit"></i></button>
+                                <button class="group-action-btn" title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
                     </ul>
                     <button class="create-group-btn" id="createGroupBtn"><i class="fas fa-plus"></i> Créer un groupe</button>
                 </div>
@@ -184,7 +222,7 @@
                             <input type="checkbox" class="task-checkbox">
                             <div class="task-info">
                                 <h4>Développer le module d'authentification</h4>
-                                <p>Assignée à: Massayo Darillle • Échéance: 20/06/2023 • Priorité: Moyenne</p>
+                                <p>Assignée à: Massayo Darille • Échéance: 20/06/2023 • Priorité: Moyenne</p>
                             </div>
                             <div class="task-actions">
                                 <button title="Modifier"><i class="fas fa-edit"></i></button>
@@ -208,7 +246,7 @@
                         </div>
                         <div class="message-item">
                             <div class="message-info">
-                                <h4>Aristide Nna<span>09:45</span></h4>
+                                <h4>Aristide Nna <span>09:45</span></h4>
                                 <p>La réunion de suivi est prévue pour demain à 14h. N'oubliez pas!</p>
                             </div>
                         </div>
@@ -253,7 +291,7 @@
                             <i class="fas fa-file-code" style="color: #f39c12; font-size: 1.5rem; margin-right: 15px;"></i>
                             <div class="file-info">
                                 <h4>script-authentification.js</h4>
-                                <p>Ajouté par: Massayo Darille • 08/05/2023 • 156 KB</p>
+                                <p>Ajouté par: Masssayo Darille • 08/05/2023 • 156 KB</p>
                             </div>
                             <div class="file-actions">
                                 <button title="Télécharger"><i class="fas fa-download"></i></button>
@@ -296,27 +334,43 @@
                         <div class="members-list">
                             <div class="member-card">
                                 <div class="member-avatar">AN</div>
+                                <span class="member-role">Admin</span>
                                 <h4>Aristide Nna</h4>
-                                <p>Administrateur</p>
                                 <p>aristidenna@gmail.com</p>
+                                <div class="member-actions">
+                                    <button class="btn btn-sm btn-primary"><i class="fas fa-envelope"></i></button>
+                                    <button class="btn btn-sm btn-danger"><i class="fas fa-user-times"></i></button>
+                                </div>
                             </div>
                             <div class="member-card">
                                 <div class="member-avatar">MG</div>
-                                <h4>mbewekam Gaelle</h4>
-                                <p>Membre</p>
-                                <p>mbewekamgaelle@gmail.com</p>
+                                <span class="member-role">Membre</span>
+                                <h4>Mbewekam Gaelle</h4>
+                                <p>gaellembewekam@gmail.com</p>
+                                <div class="member-actions">
+                                    <button class="btn btn-sm btn-primary"><i class="fas fa-envelope"></i></button>
+                                    <button class="btn btn-sm btn-danger"><i class="fas fa-user-times"></i></button>
+                                </div>
                             </div>
                             <div class="member-card">
                                 <div class="member-avatar">MD</div>
+                                <span class="member-role">Membre</span>
                                 <h4>Massayo Darille</h4>
-                                <p>Membre</p>
                                 <p>massayodarille@gmail.com</p>
+                                <div class="member-actions">
+                                    <button class="btn btn-sm btn-primary"><i class="fas fa-envelope"></i></button>
+                                    <button class="btn btn-sm btn-danger"><i class="fas fa-user-times"></i></button>
+                                </div>
                             </div>
                             <div class="member-card">
-                                <div class="member-avatar">HA</div>
+                                <div class="member-avatar">AH</div>
+                                <span class="member-role">Membre</span>
                                 <h4>Hamidou Aboubakar</h4>
-                                <p>Membre</p>
-                                <p>hamidouaboubakar@gmail.com</p>
+                                <p>aboubakarhamidou@gmail.com</p>
+                                <div class="member-actions">
+                                    <button class="btn btn-sm btn-primary"><i class="fas fa-envelope"></i></button>
+                                    <button class="btn btn-sm btn-danger"><i class="fas fa-user-times"></i></button>
+                                </div>
                             </div>
                         </div>
                         <button class="btn btn-primary" style="margin-top: 20px;"><i class="fas fa-user-plus"></i> Inviter un membre</button>
@@ -361,6 +415,209 @@
         </div>
     </section>
 
+    <!-- Admin Section -->
+    <section class="admin-section" id="admin">
+        <div class="container">
+            <div class="admin-panel">
+                <div class="admin-header">
+                    <h2><i class="fas fa-crown"></i> Panneau d'administration</h2>
+                    <span>Accès réservé aux administrateurs</span>
+                </div>
+                <div class="admin-tabs">
+                    <button class="admin-tab active" data-tab="admin-dashboard"><i class="fas fa-tachometer-alt"></i> Tableau de bord</button>
+                    <button class="admin-tab" data-tab="admin-users"><i class="fas fa-users"></i> Utilisateurs</button>
+                    <button class="admin-tab" data-tab="admin-groups"><i class="fas fa-layer-group"></i> Groupes</button>
+                    <button class="admin-tab" data-tab="admin-system"><i class="fas fa-cog"></i> Système</button>
+                </div>
+                <div class="admin-tab-content active" id="admin-dashboard">
+                    <h3>Tableau de bord</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">154</div>
+                            <div>Utilisateurs actifs</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">28</div>
+                            <div>Groupes créés</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">342</div>
+                            <div>Tâches en cours</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">97%</div>
+                            <div>Disponibilité du service</div>
+                        </div>
+                    </div>
+                    <h4>Activité récente</h4>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Utilisateur</th>
+                                <th>Action</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Mbewekam Gaelle</td>
+                                <td>Création d'un groupe</td>
+                                <td>10/06/2023 14:30</td>
+                                <td><span class="status-badge status-active">Réussi</span></td>
+                            </tr>
+                            <tr>
+                                <td>Aristide Nna</td>
+                                <td>Modification de profil</td>
+                                <td>09/06/2023 09:15</td>
+                                <td><span class="status-badge status-active">Réussi</span></td>
+                            </tr>
+                            <tr>
+                                <td>Massayo Darille</td>
+                                <td>Téléversement de fichier</td>
+                                <td>08/06/2023 16:45</td>
+                                <td><span class="status-badge status-inactive">Échec</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="admin-tab-content" id="admin-users">
+                    <h3>Gestion des utilisateurs</h3>
+                    <div class="form-actions" style="justify-content: flex-start; margin-bottom: 20px;">
+                        <button class="btn btn-primary"><i class="fas fa-user-plus"></i> Ajouter un utilisateur</button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Rôle</th>
+                                <th>Date d'inscription</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Aristide Nna</td>
+                                <td>aristidenna@gmail.com</td>
+                                <td>Administrateur</td>
+                                <td>15/03/2023</td>
+                                <td><span class="status-badge status-active">Actif</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Mbewekam Gaelle</td>
+                                <td> gaellembewekam@gmail.com</td>
+                                <td>Utilisateur</td>
+                                <td>22/04/2023</td>
+                                <td><span class="status-badge status-active">Actif</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Massayo Darille</td>
+                                <td>massayodarille@gmail.com</td>
+                                <td>Utilisateur</td>
+                                <td>05/05/2023</td>
+                                <td><span class="status-badge status-inactive">Inactif</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="admin-tab-content" id="admin-groups">
+                    <h3>Gestion des groupes</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nom du groupe</th>
+                                <th>Créateur</th>
+                                <th>Membres</th>
+                                <th>Date de création</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Projet Alpha</td>
+                                <td>Aristide Nna</td>
+                                <td>8</td>
+                                <td>10/05/2023</td>
+                                <td><span class="status-badge status-active">Actif</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Équipe Marketing</td>
+                                <td>Saidou tupac</td>
+                                <td>5</td>
+                                <td>15/05/2023</td>
+                                <td><span class="status-badge status-active">Actif</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="admin-tab-content" id="admin-system">
+                    <h3>Paramètres système</h3>
+                    <div class="form-group">
+                        <label for="system-name"><i class="fas fa-signature"></i> Nom de l'application</label>
+                        <input type="text" id="system-name" value="CollabSpace">
+                    </div>
+                    <div class="form-group">
+                        <label for="system-email"><i class="fas fa-envelope"></i> Email de contact</label>
+                        <input type="email" id="system-email" value="contact@collabspace.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="system-language"><i class="fas fa-globe"></i> Langue par défaut</label>
+                        <select id="system-language">
+                            <option value="fr" selected>Français</option>
+                            <option value="en">English</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="system-theme"><i class="fas fa-palette"></i> Thème par défaut</label>
+                        <select id="system-theme">
+                            <option value="light">Clair</option>
+                            <option value="dark">Sombre</option>
+                            <option value="auto">Automatique</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-secondary"><i class="fas fa-times"></i> Annuler</button>
+                        <button class="btn btn-primary"><i class="fas fa-save"></i> Enregistrer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer id="contact">
         <div class="container">
@@ -390,8 +647,8 @@
                 <div class="footer-column">
                     <h3>Contact</h3>
                     <ul class="footer-links">
-                        <li><i class="fas fa-envelope"></i> Aristidenna@collabspace.com</li>
-                        <li><i class="fas fa-phone"></i> +237 6 97 40 26 28</li>
+                        <li><i class="fas fa-envelope"></i> aristidenna@collabspace.com</li>
+                        <li><i class="fas fa-phone"></i> +237 6 97 40 28 29</li>
                         <li><i class="fas fa-map-marker-alt"></i> Douala, Cameroun</li>
                     </ul>
                 </div>
@@ -501,5 +758,6 @@
             </form>
         </div>
     </div>
+
 </body>
 </html>
