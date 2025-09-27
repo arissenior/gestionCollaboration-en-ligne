@@ -1,50 +1,73 @@
+
  // État de l'application
         let currentUser = null;
         let isLoggedIn = false;
         let darkMode = false;
         let isAdmin = false;
+        let currentGroup = null;
+        let invitations = [];
+        let userActivity = [];
 
         // Données des groupes
         const groupsData = {
             'projet-alpha': {
                 name: 'Projet Alpha',
-                members: 8,
+                description: 'Développement du nouveau produit innovant',
+                members:  8,
+                createdBy: 'Aristide Nna',
+                creationDate: '10/05/2023',
                 tasks: [
-                    { id: 1, title: 'Concevoir la maquette', assignedTo: 'Marie Dupont', dueDate: '15/06/2023', priority: 'Élevée', completed: false },
-                    { id: 2, title: 'Rédiger le cahier des charges', assignedTo: 'Jean Martin', dueDate: '', priority: '', completed: true },
-                    { id: 3, title: 'Développer le module d\'authentification', assignedTo: 'Pierre Leroy', dueDate: '20/06/2023', priority: 'Moyenne', completed: false }
+                    { id: 1, title: 'Concevoir la maquette', assignedTo: 'Mbewekam Gaelle', dueDate: '15/06/2023', priority: 'Élevée', completed: false },
+                    { id: 2, title: 'Rédiger le cahier des charges', assignedTo: 'Aristide Nna', dueDate: '', priority: '', completed: true },
+                    { id: 3, title: 'Développer le module d\'authentification', assignedTo: 'Massayo Darille', dueDate: '20/06/2023', priority: 'Moyenne', completed: false },
+                    { id: 4, title: 'Tests utilisateurs', assignedTo: 'Hamidou aboubakar', dueDate: '25/06/2023', priority: 'Moyenne', completed: false }
                 ],
                 messages: [
-                    { user: 'Marie Dupont', time: '10:25', content: 'J\'ai terminé la première version de la maquette. Pouvez-vous la vérifier?' },
-                    { user: 'Jean Martin', time: '09:45', content: 'La réunion de suivi est prévue pour demain à 14h. N\'oubliez pas!' },
-                    { user: 'Pierre Leroy', time: 'Hier, 16:30', content: 'J\'ai rencontré un problème avec l\'API. Quelqu\'un peut m\'aider?' }
+                    { user: 'Mbewekam Gaelle', time: '10:25', content: 'J\'ai terminé la première version de la maquette. Pouvez-vous la vérifier?' },
+                    { user: 'Aristide Nna', time: '09:45', content: 'La réunion de suivi est prévue pour demain à 14h. N\'oubliez pas!' },
+                    { user: 'Massayo Darille', time: 'Hier, 16:30', content: 'J\'ai rencontré un problème avec l\'API. Quelqu\'un peut m\'aider?' }
                 ],
                 files: [
-                    { name: 'Cahier des charges.pdf', uploadedBy: 'Jean Martin', date: '12/05/2023', size: '2.4 MB', type: 'pdf' },
-                    { name: 'Maquette-v1.png', uploadedBy: 'Marie Dupont', date: '10/05/2023', size: '1.8 MB', type: 'image' },
-                    { name: 'script-authentification.js', uploadedBy: 'Pierre Leroy', date: '08/05/2023', size: '156 KB', type: 'code' }
+                    { name: 'Cahier des charges.pdf', uploadedBy: 'Aristide Nna', date: '12/05/2023', size: '2.4 MB', type: 'pdf' },
+                    { name: 'Maquette-v1.png', uploadedBy: 'Mbewekam Gaelle', date: '10/05/2023', size: '1.8 MB', type: 'image' },
+                    { name: 'script-authentification.js', uploadedBy: 'Hamidou Aboubakar', date: '08/05/2023', size: '156 KB', type: 'code' }
+                ],
+                members: [
+                    { name: 'Aristide Nna', email: 'aristidenna@gmail.com', role: 'Admin', avatar: 'AN' },
+                    { name: 'Mbewekam Gaelle', email: 'gaellembewekam.com', role: 'Membre', avatar: 'GB' },
+                    { name: 'Massayo Darille', email: 'darillemassayo@gmail.com', role: 'Membre', avatar: 'DM' },
+                    { name: 'Hamidou Aboubakar', email: 'hamidouaboubakar', role: 'Membre', avatar: 'HA' }
                 ]
             },
             'equipe-marketing': {
                 name: 'Équipe Marketing',
+                description: 'Stratégie marketing et communication',
                 members: 5,
-                tasks: [],
+                createdBy: 'Saidou tupac',
+                creationDate: '15/05/2023',
+                tasks: [
+                    { id: 1, title: 'Créer la campagne publicitaire', assignedTo: 'Itock Fodock', dueDate: '30/06/2023', priority: 'Élevée', completed: false }
+                ],
                 messages: [],
-                files: []
+                files: [],
+                members: [
+                    { name: 'Aristide Nna', email: 'aristidenna@gmail.com', role: 'Admin', avatar: 'AN' },
+                    { name: 'Itock Fodock', email: 'itockfodoc@gmail.com', role: 'Membre', avatar: 'IT' }
+                ]
             },
             'developpeurs-web': {
                 name: 'Développeurs Web',
+                description: 'Équipe de développement front-end et back-end',
                 members: 7,
+                createdBy: 'Engoulou Dyllan',
+                creationDate: '20/05/2023',
                 tasks: [],
                 messages: [],
-                files: []
-            },
-            'designers-ux': {
-                name: 'Designers UX/UI',
-                members: 4,
-                tasks: [],
-                messages: [],
-                files: []
+                files: [],
+                members: [
+                    { name: 'Pierre Leroy', email: 'pierre.leroy@example.com', role: 'Admin', avatar: 'PL' },
+                    { name: 'John Doe', email: 'john.doe@example.com', role: 'Membre', avatar: 'JD' }
+                ]
             }
         };
 
@@ -80,30 +103,37 @@
                 });
             });
 
-            // Gestion de la sélection des groupes
-            document.querySelectorAll('.group-list li').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    // Ne pas déclencher la sélection si on clique sur les boutons d'action
-                    if (e.target.closest('.group-actions')) return;
-                    
-                    const groupId = item.getAttribute('data-group');
-                    selectGroup(groupId);
+            // Gestion des onglets dashboard
+            document.querySelectorAll('.dashboard-tab-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tabId = this.getAttribute('href').substring(1);
+                    switchDashboardTab(tabId);
                 });
             });
 
+            // Gestion de la sélection des groupes
+            document.getElementById('groupList').addEventListener('click', function(e) {
+                const groupItem = e.target.closest('li');
+                if (groupItem && !e.target.closest('.group-actions')) {
+                    const groupId = groupItem.getAttribute('data-group');
+                    selectGroup(groupId);
+                }
+            });
+
             // Gestion des boutons d'action des groupes
-            document.querySelectorAll('.group-action-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const groupItem = this.closest('li');
+            document.getElementById('groupList').addEventListener('click', function(e) {
+                if (e.target.closest('.group-action-btn')) {
+                    const btn = e.target.closest('.group-action-btn');
+                    const groupItem = btn.closest('li');
                     const groupId = groupItem.getAttribute('data-group');
                     
-                    if (this.querySelector('.fa-edit')) {
+                    if (btn.querySelector('.fa-edit')) {
                         editGroup(groupId);
-                    } else if (this.querySelector('.fa-trash')) {
+                    } else if (btn.querySelector('.fa-trash')) {
                         deleteGroup(groupId);
                     }
-                });
+                }
             });
 
             // Gestion de l'ajout de nouvelles tâches
@@ -130,6 +160,7 @@
             document.getElementById('loginBtn').addEventListener('click', () => openModal('loginModal'));
             document.getElementById('signupBtn').addEventListener('click', () => openModal('signupModal'));
             document.getElementById('createGroupBtn').addEventListener('click', () => openModal('createGroupModal'));
+            document.getElementById('inviteMemberBtn').addEventListener('click', () => openModal('inviteMemberModal'));
 
             document.querySelectorAll('.close-modal').forEach(button => {
                 button.addEventListener('click', closeModal);
@@ -139,6 +170,8 @@
             document.getElementById('loginForm').addEventListener('submit', handleLogin);
             document.getElementById('signupForm').addEventListener('submit', handleSignup);
             document.getElementById('createGroupForm').addEventListener('submit', handleCreateGroup);
+            document.getElementById('inviteMemberForm').addEventListener('submit', handleInviteMember);
+            document.getElementById('saveGroupSettings').addEventListener('click', saveGroupSettings);
 
             // Gestion du thème sombre
             document.getElementById('themeToggle').addEventListener('click', toggleDarkMode);
@@ -162,6 +195,11 @@
                 link.addEventListener('click', showAdminSection);
             });
 
+            // Gestion de la navigation dashboard
+            document.querySelectorAll('.dashboard-nav-link').forEach(link => {
+                link.addEventListener('click', showDashboardSection);
+            });
+
             // Validation en temps réel des formulaires
             setupFormValidation();
 
@@ -170,6 +208,9 @@
 
             // Vérifier si l'utilisateur est déjà connecté (simulation)
             checkLoginStatus();
+
+            // Charger les groupes
+            loadGroups();
         }
 
         function switchTab(tabId) {
@@ -194,9 +235,71 @@
             
             // Afficher le contenu correspondant
             document.getElementById(tabId).classList.add('active');
+
+            // Charger les données spécifiques à l'onglet
+            if (tabId === 'admin-invitations') {
+                loadAdminInvitations();
+            } else if (tabId === 'admin-users') {
+                loadAdminUsers();
+            } else if (tabId === 'admin-groups') {
+                loadAdminGroups();
+            } else if (tabId === 'admin-dashboard') {
+                loadAdminDashboard();
+            }
+        }
+
+        function switchDashboardTab(tabId) {
+            // Retirer la classe active de tous les onglets et liens
+            document.querySelectorAll('.dashboard-tab-link').forEach(link => link.classList.remove('active'));
+            document.querySelectorAll('.dashboard-tab').forEach(tab => tab.classList.remove('active'));
+            
+            // Ajouter la classe active à l'onglet cliqué
+            document.querySelector(`.dashboard-tab-link[href="#${tabId}"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+
+            // Charger les données spécifiques à l'onglet
+            if (tabId === 'progression') {
+                loadUserProgress();
+            } else if (tabId === 'mes-taches') {
+                loadUserTasks();
+            } else if (tabId === 'mes-invitations') {
+                loadUserInvitations();
+            } else if (tabId === 'statistiques') {
+                loadUserStatistics();
+            }
+        }
+
+        function loadGroups() {
+            const groupList = document.getElementById('groupList');
+            groupList.innerHTML = '';
+
+            for (const groupId in groupsData) {
+                const group = groupsData[groupId];
+                const groupItem = document.createElement('li');
+                groupItem.setAttribute('data-group', groupId);
+                groupItem.innerHTML = `
+                    <div>
+                        <i class="fas fa-users"></i> ${group.name}
+                    </div>
+                    <div class="group-actions">
+                        <button class="group-action-btn" title="Modifier"><i class="fas fa-edit"></i></button>
+                        <button class="group-action-btn" title="Supprimer"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                groupList.appendChild(groupItem);
+            }
+
+            // Sélectionner le premier groupe par défaut
+            const firstGroup = document.querySelector('.group-list li');
+            if (firstGroup) {
+                const firstGroupId = firstGroup.getAttribute('data-group');
+                selectGroup(firstGroupId);
+            }
         }
 
         function selectGroup(groupId) {
+            currentGroup = groupId;
+            
             // Mettre à jour la sélection visuelle
             document.querySelectorAll('.group-list li').forEach(li => li.classList.remove('active'));
             document.querySelector(`.group-list li[data-group="${groupId}"]`).classList.add('active');
@@ -205,6 +308,8 @@
             const group = groupsData[groupId];
             document.getElementById('groupTitle').textContent = group.name;
             document.getElementById('memberCount').textContent = group.members;
+            document.getElementById('groupName').value = group.name;
+            document.getElementById('groupDescription').value = group.description;
             
             // Mettre à jour les tâches
             updateTasksDisplay(group.tasks);
@@ -214,6 +319,12 @@
             
             // Mettre à jour les fichiers
             updateFilesDisplay(group.files);
+            
+            // Mettre à jour les membres
+            updateMembersDisplay(group.members);
+            
+            // Mettre à jour le calendrier
+            updateCalendarDisplay(groupId);
         }
 
         function editGroup(groupId) {
@@ -245,10 +356,8 @@
         }
 
         function updateTasksDisplay(tasks) {
-            const tasksContainer = document.getElementById('tasks');
-            // Supprimer les tâches existantes (sauf le formulaire d'ajout)
-            const addForm = tasksContainer.querySelector('.add-item-form');
-            tasksContainer.innerHTML = '<h3>Tâches du groupe</h3>';
+            const tasksContainer = document.getElementById('groupTasksList');
+            tasksContainer.innerHTML = '';
             
             // Ajouter chaque tâche
             tasks.forEach(task => {
@@ -268,10 +377,7 @@
                 tasksContainer.appendChild(taskElement);
             });
             
-            // Réajouter le formulaire d'ajout
-            tasksContainer.appendChild(addForm);
-            
-            // Ajouter les écouteurs d'événements pour les nouvelles tâches
+            // Ajouter les écouteurs d'événements pour les tâches
             document.querySelectorAll('.task-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     const taskItem = this.closest('.task-item');
@@ -279,6 +385,10 @@
                     
                     if (this.checked) {
                         showNotification(`Tâche "${taskTitle}" marquée comme terminée`, 'success');
+                        // Mettre à jour la progression de l'utilisateur
+                        if (currentUser && task.assignedTo === currentUser.name) {
+                            loadUserProgress();
+                        }
                     } else {
                         showNotification(`Tâche "${taskTitle}" marquée comme non terminée`, 'warning');
                     }
@@ -304,10 +414,8 @@
         }
 
         function updateMessagesDisplay(messages) {
-            const messagesContainer = document.getElementById('messages');
-            // Supprimer les messages existants (sauf le formulaire d'ajout)
-            const addForm = messagesContainer.querySelector('.add-item-form');
-            messagesContainer.innerHTML = '<h3>Messages du groupe</h3>';
+            const messagesContainer = document.getElementById('groupMessagesList');
+            messagesContainer.innerHTML = '';
             
             // Ajouter chaque message
             messages.forEach(message => {
@@ -321,16 +429,11 @@
                 `;
                 messagesContainer.appendChild(messageElement);
             });
-            
-            // Réajouter le formulaire d'ajout
-            messagesContainer.appendChild(addForm);
-        }
+        };
 
         function updateFilesDisplay(files) {
-            const filesContainer = document.getElementById('files');
-            // Supprimer les fichiers existants (sauf le formulaire d'ajout)
-            const addForm = filesContainer.querySelector('.add-item-form');
-            filesContainer.innerHTML = '<h3>Fichiers partagés</h3>';
+            const filesContainer = document.getElementById('groupFilesList');
+            filesContainer.innerHTML = '';
             
             // Ajouter chaque fichier
             files.forEach(file => {
@@ -366,10 +469,7 @@
                     </div>
                 `;
                 filesContainer.appendChild(fileElement);
-            });
-            
-            // Réajouter le formulaire d'ajout
-            filesContainer.appendChild(addForm);
+            })
             
             // Ajouter les écouteurs d'événements pour les boutons d'action des fichiers
             document.querySelectorAll('.file-actions button').forEach(button => {
@@ -389,17 +489,88 @@
             });
         }
 
+        function updateMembersDisplay(members) {
+            const membersContainer = document.getElementById('groupMembersList');
+            membersContainer.innerHTML = '';
+            
+            // Ajouter chaque membre
+            members.forEach(member => {
+                const memberElement = document.createElement('div');
+                memberElement.className = 'member-card';
+                memberElement.innerHTML = `
+                    <div class="member-avatar">${member.avatar}</div>
+                    <span class="member-role">${member.role}</span>
+                    <h4>${member.name}</h4>
+                    <p>${member.email}</p>
+                    <div class="member-actions">
+                        <button class="btn btn-sm btn-primary"><i class="fas fa-envelope"></i></button>
+                        <button class="btn btn-sm btn-danger"><i class="fas fa-user-times"></i></button>
+                    </div>
+                `;
+                membersContainer.appendChild(memberElement);
+            });
+            
+            // Ajouter les écouteurs d'événements pour les boutons d'action des membres
+            document.querySelectorAll('.member-actions button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const memberCard = this.closest('.member-card');
+                    const memberName = memberCard.querySelector('h4').textContent;
+                    
+                    if (this.querySelector('.fa-envelope')) {
+                        showNotification(`Message envoyé à ${memberName}`, 'success');
+                    } else if (this.querySelector('.fa-user-times')) {
+                        if (confirm(`Êtes-vous sûr de vouloir retirer ${memberName} du groupe ?`)) {
+                            showNotification(`${memberName} a été retiré du groupe`, 'success');
+                        }
+                    }
+                });
+            });
+        }
+
+        function updateCalendarDisplay(groupId) {
+            const calendar = document.getElementById('groupCalendar');
+            calendar.innerHTML = '';
+            
+            // En-têtes des jours
+            const days = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            days.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-header';
+                dayHeader.textContent = day;
+                calendar.appendChild(dayHeader);
+            });
+            
+            // Jours du mois (simplifié)
+            for (let i = 1; i <= 31; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = i;
+                
+                // Marquer les jours avec des événements (exemple)
+                if (i === 15 || i === 20 || i === 25) {
+                    dayElement.classList.add('has-event');
+                    dayElement.title = 'Événement ce jour';
+                    
+                    // Ajouter un événement au clic
+                    dayElement.addEventListener('click', function() {
+                        showNotification(`Événement du ${i} juin: Réunion d'équipe`, 'success');
+                    });
+                }
+                
+                calendar.appendChild(dayElement);
+            }
+        }
+
         function addNewTask() {
             const input = document.getElementById('newTaskInput');
             const taskText = input.value.trim();
             
             if (taskText !== '') {
-                // Ajouter la tâche aux données (simplifié)
-                const currentGroup = document.querySelector('.group-list li.active').getAttribute('data-group');
+                // Ajouter la tâche aux données
                 const newTask = {
                     id: groupsData[currentGroup].tasks.length + 1,
                     title: taskText,
-                    assignedTo: 'Vous',
+                    assignedTo: currentUser.name,
                     dueDate: '',
                     priority: '',
                     completed: false
@@ -409,6 +580,9 @@
                 updateTasksDisplay(groupsData[currentGroup].tasks);
                 input.value = '';
                 showNotification('Tâche ajoutée avec succès', 'success');
+                
+                // Enregistrer l'activité
+                logUserActivity(`a ajouté la tâche "${taskText}" dans le groupe ${groupsData[currentGroup].name}`);
             }
         }
 
@@ -417,13 +591,12 @@
             const messageText = input.value.trim();
             
             if (messageText !== '') {
-                // Ajouter le message aux données (simplifié)
-                const currentGroup = document.querySelector('.group-list li.active').getAttribute('data-group');
+                // Ajouter le message aux données
                 const now = new Date();
                 const timeString = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
                 
                 const newMessage = {
-                    user: 'Vous',
+                    user: currentUser.name,
                     time: timeString,
                     content: messageText
                 };
@@ -434,8 +607,11 @@
                 showNotification('Message envoyé', 'success');
                 
                 // Faire défiler vers le bas pour voir le nouveau message
-                const messagesContainer = document.getElementById('messages');
+                const messagesContainer = document.getElementById('groupMessagesList');
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Enregistrer l'activité
+                logUserActivity(`a envoyé un message dans le groupe ${groupsData[currentGroup].name}`);
             }
         }
 
@@ -445,10 +621,361 @@
                 const file = fileInput.files[0];
                 showNotification(`Fichier "${file.name}" téléversé avec succès`, 'success');
                 fileInput.value = '';
+                
+                // Enregistrer l'activité
+                logUserActivity(`a téléversé un fichier dans le groupe ${groupsData[currentGroup].name}`);
             } else {
                 showNotification('Veuillez sélectionner un fichier', 'error');
             }
         }
+
+        function saveGroupSettings() {
+            const name = document.getElementById('groupName').value;
+            const description = document.getElementById('groupDescription').value;
+            const visibility = document.getElementById('groupVisibility').value;
+            const notifications = document.getElementById('notificationSettings').value;
+            
+            if (name) {
+                groupsData[currentGroup].name = name;
+                groupsData[currentGroup].description = description;
+                groupsData[currentGroup].visibility = visibility;
+                
+                document.getElementById('groupTitle').textContent = name;
+                showNotification('Paramètres du groupe enregistrés avec succès', 'success');
+                
+                // Enregistrer l'activité
+                logUserActivity(`a modifié les paramètres du groupe ${name}`);
+            } else {
+                showNotification('Veuillez saisir un nom pour le groupe.', 'error');
+            }
+        }
+
+        function handleInviteMember(e) {
+            e.preventDefault();
+            const email = document.getElementById('inviteeEmail').value;
+            const message = document.getElementById('invitationMessage').value;
+            
+            // Validation
+            if (!validateEmail(email)) {
+                document.getElementById('inviteeEmail').parentElement.classList.add('error');
+                return;
+            }
+            
+            // Créer l'invitation
+            const invitation = {
+                id: invitations.length + 1,
+                groupId: currentGroup,
+                groupName: groupsData[currentGroup].name,
+                inviter: currentUser.name,
+                inviterEmail: currentUser.email,
+                inviteeEmail: email,
+                message: message,
+                status: 'pending',
+                date: new Date().toLocaleDateString('fr-FR')
+            };
+            
+            invitations.push(invitation);
+            closeModal();
+            showNotification('Invitation envoyée. En attente de validation par l\'administrateur.', 'info');
+            
+            // Enregistrer l'activité
+            logUserActivity(`a invité ${email} à rejoindre le groupe ${groupsData[currentGroup].name}`);
+        }
+
+        function loadUserProgress() {
+            if (!currentUser) return;
+            
+            // Calculer les statistiques de progression
+            let totalTasks = 0;
+            let completedTasks = 0;
+            
+            for (const groupId in groupsData) {
+                const group = groupsData[groupId];
+                const userTasks = group.tasks.filter(task => task.assignedTo === currentUser.name);
+                totalTasks += userTasks.length;
+                completedTasks += userTasks.filter(task => task.completed).length;
+            }
+            
+            const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            
+            // Mettre à jour l'interface
+            document.getElementById('totalTasks').textContent = totalTasks;
+            document.getElementById('completedTasks').textContent = completedTasks;
+            document.getElementById('completionRate').textContent = completionRate + '%';
+            
+            // Mettre à jour la progression par groupe
+            const groupProgressContainer = document.getElementById('groupProgress');
+            groupProgressContainer.innerHTML = '';
+            
+            for (const groupId in groupsData) {
+                const group = groupsData[groupId];
+                const userTasks = group.tasks.filter(task => task.assignedTo === currentUser.name);
+                const groupCompleted = userTasks.filter(task => task.completed).length;
+                const groupTotal = userTasks.length;
+                const groupRate = groupTotal > 0 ? Math.round((groupCompleted / groupTotal) * 100) : 0;
+                
+                const progressItem = document.createElement('div');
+                progressItem.style.marginBottom = '15px';
+                progressItem.innerHTML = `
+                    <div style="display: flex; justify-content: between; margin-bottom: 5px;">
+                        <span>${group.name}</span>
+                        <span>${groupCompleted}/${groupTotal} (${groupRate}%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: ${groupRate}%"></div>
+                    </div>
+                `;
+                groupProgressContainer.appendChild(progressItem);
+            }
+        }
+
+        function loadUserTasks() {
+            if (!currentUser) return;
+            
+            const tasksList = document.getElementById('userTasksList');
+            tasksList.innerHTML = '';
+            
+            for (const groupId in groupsData) {
+                const group = groupsData[groupId];
+                const userTasks = group.tasks.filter(task => task.assignedTo === currentUser.name);
+                
+                userTasks.forEach(task => {
+                    const taskItem = document.createElement('li');
+                    taskItem.className = 'task-item';
+                    taskItem.innerHTML = `
+                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+                        <div class="task-info">
+                            <h4>${task.title}</h4>
+                            <p>Groupe: ${group.name} • ${task.dueDate ? 'Échéance: ' + task.dueDate : ''} ${task.priority ? '• Priorité: ' + task.priority : ''}</p>
+                        </div>
+                        <div class="task-actions">
+                            <button title="Modifier"><i class="fas fa-edit"></i></button>
+                        </div>
+                    `;
+                    tasksList.appendChild(taskItem);
+                });
+            }
+            
+            if (tasksList.children.length === 0) {
+                tasksList.innerHTML = '<li class="task-item">Aucune tâche assignée</li>';
+            }
+        }
+
+        function loadUserInvitations() {
+            if (!currentUser) return;
+            
+            const invitationsList = document.getElementById('userInvitationsList');
+            invitationsList.innerHTML = '';
+            
+            const userInvitations = invitations.filter(inv => inv.inviterEmail === currentUser.email);
+            
+            userInvitations.forEach(invitation => {
+                const invitationItem = document.createElement('li');
+                invitationItem.className = 'invitation-item';
+                invitationItem.innerHTML = `
+                    <div class="invitation-info">
+                        <h4>Invitation à ${invitation.groupName}</h4>
+                        <p>Invité: ${invitation.inviteeEmail} • Date: ${invitation.date} • Statut: <span class="status-badge status-${invitation.status}">${invitation.status === 'pending' ? 'En attente' : invitation.status === 'approved' ? 'Approuvée' : 'Rejetée'}</span></p>
+                    </div>
+                `;
+                invitationsList.appendChild(invitationItem);
+            });
+            
+            if (invitationsList.children.length === 0) {
+                invitationsList.innerHTML = '<li class="invitation-item">Aucune invitation envoyée</li>';
+            }
+        }
+
+        function loadUserStatistics() {
+            if (!currentUser) return;
+            
+            // Calculer les statistiques
+            let groupsCount = 0;
+            let messagesSent = 0;
+            let filesUploaded = 0;
+            
+            for (const groupId in groupsData) {
+                const group = groupsData[groupId];
+                // Vérifier si l'utilisateur est membre du groupe
+                if (group.members.some(member => member.email === currentUser.email)) {
+                    groupsCount++;
+                    messagesSent += group.messages.filter(msg => msg.user === currentUser.name).length;
+                }
+            }
+            
+            // Mettre à jour l'interface
+            document.getElementById('groupsCount').textContent = groupsCount;
+            document.getElementById('messagesSent').textContent = messagesSent;
+            document.getElementById('filesUploaded').textContent = filesUploaded;
+            
+            // Afficher l'activité récente
+            const recentActivity = document.getElementById('recentActivity');
+            recentActivity.innerHTML = '';
+            
+            const userActivities = userActivity.filter(activity => activity.user === currentUser.name).slice(-5).reverse();
+            
+            userActivities.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.style.padding = '10px';
+                activityItem.style.borderBottom = '1px solid #eee';
+                activityItem.innerHTML = `
+                    <p>${activity.action}</p>
+                    <small>${activity.date}</small>
+                `;
+                recentActivity.appendChild(activityItem);
+            });
+            
+            if (recentActivity.children.length === 0) {
+                recentActivity.innerHTML = '<p>Aucune activité récente</p>';
+            }
+        }
+
+        function loadAdminInvitations() {
+            const invitationsTable = document.getElementById('adminInvitationsTable');
+            invitationsTable.innerHTML = '';
+            
+            invitations.forEach(invitation => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${invitation.inviter}</td>
+                    <td>${invitation.inviteeEmail}</td>
+                    <td>${invitation.groupName}</td>
+                    <td>${invitation.date}</td>
+                    <td><span class="status-badge status-${invitation.status}">${invitation.status === 'pending' ? 'En attente' : invitation.status === 'approved' ? 'Approuvée' : 'Rejetée'}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            ${invitation.status === 'pending' ? `
+                                <button class="btn btn-sm btn-success approve-invitation" data-id="${invitation.id}"><i class="fas fa-check"></i></button>
+                                <button class="btn btn-sm btn-danger reject-invitation" data-id="${invitation.id}"><i class="fas fa-times"></i></button>
+                            ` : ''}
+                        </div>
+                    </td>
+                `;
+                invitationsTable.appendChild(row);
+            });
+            
+            // Ajouter les écouteurs d'événements pour les boutons d'approbation/rejet
+            document.querySelectorAll('.approve-invitation').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const invitationId = parseInt(this.getAttribute('data-id'));
+                    approveInvitation(invitationId);
+                });
+            });
+            
+            document.querySelectorAll('.reject-invitation').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const invitationId = parseInt(this.getAttribute('data-id'));
+                    rejectInvitation(invitationId);
+                });
+            });
+        }
+
+        function loadAdminUsers() {
+            const usersTable = document.getElementById('adminUsersTable');
+            usersTable.innerHTML = '';
+            
+            // Simuler des utilisateurs
+            const users = [
+                { name: 'John Doe', email: 'john.doe@example.com', role: 'Administrateur', registrationDate: '15/03/2023', status: 'Actif' },
+                { name: 'Marie Dupont', email: 'marie.dupont@example.com', role: 'Utilisateur', registrationDate: '22/04/2023', status: 'Actif' },
+                { name: 'Jean Martin', email: 'jean.martin@example.com', role: 'Utilisateur', registrationDate: '05/05/2023', status: 'Inactif' }
+            ];
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.role}</td>
+                    <td>${user.registrationDate}</td>
+                    <td><span class="status-badge ${user.status === 'Actif' ? 'status-approved' : 'status-rejected'}">${user.status}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+                usersTable.appendChild(row);
+            });
+        }
+
+        function loadAdminGroups() {
+            const groupsTable = document.getElementById('adminGroupsTable');
+            groupsTable.innerHTML = '';
+            
+            for (const groupId in groupsData) {
+                const group = groupsData[groupId];
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${group.name}</td>
+                    <td>${group.createdBy}</td>
+                    <td>${group.members}</td>
+                    <td>${group.creationDate}</td>
+                    <td><span class="status-badge status-approved">Actif</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+                groupsTable.appendChild(row);
+            }
+        }
+
+        function loadAdminDashboard() {
+            const activityTable = document.getElementById('adminActivityTable');
+            activityTable.innerHTML = '';
+            
+            // Simuler des activités récentes
+            const activities = [
+                { user: 'Aristide Nna', action: 'Création d\'un groupe', date: '10/06/2023 14:30', status: 'Réussi' },
+                { user: 'Engoulou Dyllan', action: 'Modification de profil', date: '09/06/2023 09:15', status: 'Réussi' },
+                { user: 'Mbewekam Gaelle', action: 'Téléversement de fichier', date: '08/06/2023 16:45', status: 'Échec' }
+            ];
+            
+            activities.forEach(activity => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${activity.user}</td>
+                    <td>${activity.action}</td>
+                    <td>${activity.date}</td>
+                    <td><span class="status-badge ${activity.status === 'Réussi' ? 'status-approved' : 'status-rejected'}">${activity.status}</span></td>
+                `;
+                activityTable.appendChild(row);
+            });
+        }
+
+        function approveInvitation(invitationId) {
+            const invitation = invitations.find(inv => inv.id === invitationId);
+            if (invitation) {
+                invitation.status = 'approved';
+                showNotification(`Invitation approuvée. ${invitation.inviteeEmail} peut maintenant rejoindre le groupe.`, 'success');
+                loadAdminInvitations();
+            }
+        }
+
+        function rejectInvitation(invitationId) {
+            const invitation = invitations.find(inv => inv.id === invitationId);
+            if (invitation) {
+                invitation.status = 'rejected';
+                showNotification(`Invitation rejetée.`, 'warning');
+                loadAdminInvitations();
+            }
+        }
+
+        function logUserActivity(action) {
+            const activity = {
+                user: currentUser.name,
+                action: action,
+                date: new Date().toLocaleString('fr-FR')
+            };
+            userActivity.push(activity);
+        }
+
+        // Les autres fonctions (openModal, closeModal, handleLogin, etc.) restent similaires à la version précédente
+        // Pour des raisons de longueur, je vais inclure seulement les fonctions essentielles modifiées
 
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'flex';
@@ -506,12 +1033,10 @@
                 closeModal();
                 showNotification('Connexion réussie!', 'success');
                 
-                // Rediriger vers l'admin si c'est un admin
-                if (isAdmin) {
-                    setTimeout(() => {
-                        showAdminSection();
-                    }, 1000);
-                }
+                // Rediriger vers le tableau de bord
+                setTimeout(() => {
+                    showDashboardSection();
+                }, 1000);
             } else {
                 showNotification('Veuillez remplir tous les champs.', 'error');
             }
@@ -586,53 +1111,27 @@
                     description: description,
                     visibility: visibility,
                     members: 1,
+                    createdBy: currentUser.name,
+                    creationDate: new Date().toLocaleDateString('fr-FR'),
                     tasks: [],
                     messages: [],
-                    files: []
+                    files: [],
+                    members: [
+                        { name: currentUser.name, email: currentUser.email, role: 'Admin', avatar: currentUser.avatar }
+                    ]
                 };
-                
-                // Ajouter le groupe à la liste
-                const groupList = document.getElementById('groupList');
-                const newGroupItem = document.createElement('li');
-                newGroupItem.setAttribute('data-group', groupId);
-                newGroupItem.innerHTML = `
-                    <div>
-                        <i class="fas fa-users"></i> ${name}
-                    </div>
-                    <div class="group-actions">
-                        <button class="group-action-btn" title="Modifier"><i class="fas fa-edit"></i></button>
-                        <button class="group-action-btn" title="Supprimer"><i class="fas fa-trash"></i></button>
-                    </div>
-                `;
-                groupList.appendChild(newGroupItem);
-                
-                // Ajouter l'écouteur d'événements au nouveau groupe
-                newGroupItem.addEventListener('click', function(e) {
-                    if (e.target.closest('.group-actions')) return;
-                    const groupId = this.getAttribute('data-group');
-                    selectGroup(groupId);
-                });
-                
-                // Ajouter les écouteurs d'événements aux boutons d'action
-                newGroupItem.querySelectorAll('.group-action-btn').forEach(btn => {
-                    btn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const groupItem = this.closest('li');
-                        const groupId = groupItem.getAttribute('data-group');
-                        
-                        if (this.querySelector('.fa-edit')) {
-                            editGroup(groupId);
-                        } else if (this.querySelector('.fa-trash')) {
-                            deleteGroup(groupId);
-                        }
-                    });
-                });
                 
                 closeModal();
                 showNotification('Groupe créé avec succès!', 'success');
                 
-                // Réinitialiser le formulaire
-                document.getElementById('createGroupForm').reset();
+                // Recharger les groupes
+                loadGroups();
+                
+                // Sélectionner le nouveau groupe
+                selectGroup(groupId);
+                
+                // Enregistrer l'activité
+                logUserActivity(`a créé le groupe ${name}`);
             } else {
                 showNotification('Veuillez saisir un nom pour le groupe.', 'error');
             }
@@ -647,6 +1146,11 @@
             document.getElementById('userName').textContent = currentUser.name;
             document.getElementById('userAvatar').textContent = currentUser.avatar;
             document.querySelector('.user-role').textContent = currentUser.role;
+            
+            // Mettre à jour le tableau de bord
+            document.getElementById('dashboardUserName').textContent = currentUser.name;
+            document.getElementById('dashboardUserRole').textContent = currentUser.role;
+            document.getElementById('dashboardUserAvatar').textContent = currentUser.avatar;
             
             // Afficher les éléments admin si l'utilisateur est admin
             if (isAdmin) {
@@ -724,6 +1228,7 @@
             isLoggedIn = false;
             isAdmin = false;
             currentUser = null;
+            currentGroup = null;
             
             // Masquer le menu utilisateur
             document.getElementById('userMenu').style.display = 'none';
@@ -747,6 +1252,11 @@
             
             // Masquer la section admin si elle est visible
             document.getElementById('admin').style.display = 'none';
+            document.getElementById('tableau-de-bord').style.display = 'none';
+            
+            // Afficher la section d'accueil
+            document.getElementById('accueil').style.display = 'block';
+            document.getElementById('groupes').style.display = 'block';
             
             // Supprimer les données de connexion
             localStorage.removeItem('collabspace_loggedIn');
@@ -775,6 +1285,32 @@
             // Scroller vers le haut
             window.scrollTo(0, 0);
         }
+
+        function showDashboardSection(e) {
+            if (e) e.preventDefault();
+            
+            if (!isLoggedIn) {
+                showNotification('Veuillez vous connecter pour accéder au tableau de bord', 'error');
+                return;
+            }
+            
+            // Masquer les autres sections
+            document.querySelectorAll('section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Afficher la section dashboard
+            document.getElementById('tableau-de-bord').style.display = 'block';
+            
+            // Charger les données du dashboard
+            loadUserProgress();
+            
+            // Scroller vers le haut
+            window.scrollTo(0, 0);
+        }
+
+        // Les autres fonctions (handleSearch, validateEmail, showNotification, etc.) restent similaires
+        // Pour des raisons de longueur, je vais inclure seulement les fonctions essentielles
 
         function handleSearch(e) {
             const query = e.target.value.toLowerCase();
@@ -874,6 +1410,13 @@
                     this.parentElement.classList.remove('error');
                 }
             });
+            
+            // Validation en temps réel pour le formulaire d'invitation
+            document.getElementById('inviteeEmail').addEventListener('input', function() {
+                if (validateEmail(this.value)) {
+                    this.parentElement.classList.remove('error');
+                }
+            });
         }
 
         function validateEmail(email) {
@@ -886,7 +1429,7 @@
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation-triangle' : 'exclamation-circle'}"></i>
+                <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation-triangle' : type === 'warning' ? 'exclamation-circle' : 'info-circle'}"></i>
                 ${message}
             `;
             
@@ -907,62 +1450,7 @@
         }
 
         function initializeCalendar() {
-            const calendar = document.querySelector('.calendar');
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = today.getMonth(); // Juin (index 5)
-            
-            // Déterminer le premier jour du mois
-            const firstDay = new Date(year, month, 1);
-            const startingDay = firstDay.getDay(); // 0 = Dimanche, 1 = Lundi, etc.
-            
-            // Ajuster pour commencer le lundi
-            const adjustedStartingDay = startingDay === 0 ? 6 : startingDay - 1;
-            
-            // Déterminer le nombre de jours dans le mois
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            
-            // Ajouter les jours du mois précédent
-            const prevMonth = new Date(year, month, 0);
-            const daysInPrevMonth = prevMonth.getDate();
-            
-            for (let i = adjustedStartingDay - 1; i >= 0; i--) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day other-month';
-                dayElement.textContent = daysInPrevMonth - i;
-                calendar.appendChild(dayElement);
-            }
-            
-            // Ajouter les jours du mois actuel
-            for (let i = 1; i <= daysInMonth; i++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                dayElement.textContent = i;
-                
-                // Marquer les jours avec des événements
-                if (i === 15 || i === 20 || i === 25) {
-                    dayElement.classList.add('has-event');
-                    dayElement.title = 'Événement ce jour';
-                    
-                    // Ajouter un événement au clic
-                    dayElement.addEventListener('click', function() {
-                        showNotification(`Événement du ${i} juin: Réunion d'équipe`, 'success');
-                    });
-                }
-                
-                calendar.appendChild(dayElement);
-            }
-            
-            // Compléter avec les jours du mois suivant
-            const totalCells = 42; // 6 semaines de 7 jours
-            const remainingCells = totalCells - (adjustedStartingDay + daysInMonth);
-            
-            for (let i = 1; i <= remainingCells; i++) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day other-month';
-                dayElement.textContent = i;
-                calendar.appendChild(dayElement);
-            }
+            // Cette fonction est déjà implémentée dans updateCalendarDisplay
         }
 
         // Fermer les modales en cliquant à l'extérieur
@@ -995,37 +1483,5 @@
             });
         });
 
-        // Gestion des boutons dans la section membres
-        document.querySelectorAll('.member-actions button').forEach(button => {
-            button.addEventListener('click', function() {
-                const memberCard = this.closest('.member-card');
-                const memberName = memberCard.querySelector('h4').textContent;
-                
-                if (this.querySelector('.fa-envelope')) {
-                    showNotification(`Message envoyé à ${memberName}`, 'success');
-                } else if (this.querySelector('.fa-user-times')) {
-                    if (confirm(`Êtes-vous sûr de vouloir retirer ${memberName} du groupe ?`)) {
-                        showNotification(`${memberName} a été retiré du groupe`, 'success');
-                    }
-                }
-            });
-        });
-
-        // Gestion des boutons dans le panneau d'administration
-        document.querySelectorAll('.admin-table .btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const row = this.closest('tr');
-                const name = row.querySelector('td:first-child').textContent;
-                
-                if (this.querySelector('.fa-edit')) {
-                    showNotification(`Modification de ${name}`, 'warning');
-                } else if (this.querySelector('.fa-trash')) {
-                    if (confirm(`Êtes-vous sûr de vouloir supprimer ${name} ?`)) {
-                        row.remove();
-                        showNotification(`${name} a été supprimé`, 'success');
-                    }
-                }
-            });
-        });
-
-        // Pour tester l'accès admin, utilisez l'email: admin@collabspace.com (mot de passe:FFF)
+        // Pour tester l'accès admin, utilisez l'email: admin@collabspace.com (mot de passe:任意)
+ 

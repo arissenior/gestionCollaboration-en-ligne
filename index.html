@@ -9,7 +9,7 @@
     <script type="module" src="script.js"></script>
 </head>
 <body>
-      <!-- Header -->
+        <!-- Header -->
     <header>
         <div class="container">
             <nav class="navbar">
@@ -24,7 +24,7 @@
                 
                 <ul class="nav-links" id="navLinks">
                     <li><a href="#accueil"><i class="fas fa-home"></i> Accueil</a></li>
-                    <li><a href="#fonctionnalites"><i class="fas fa-star"></i> Fonctionnalités</a></li>
+                    <li><a href="#tableau-de-bord" class="dashboard-nav-link"><i class="fas fa-tachometer-alt"></i> Tableau de bord</a></li>
                     <li><a href="#groupes"><i class="fas fa-layer-group"></i> Groupes</a></li>
                     <li><a href="#admin" class="admin-nav" style="display: none;"><i class="fas fa-crown"></i> Administration</a></li>
                     <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
@@ -47,12 +47,13 @@
                     </div>
                     
                     <div class="user-menu" id="userMenu">
-                        <div class="user-avatar" id="userAvatar">JD</div>
+                        <div class="user-avatar" id="userAvatar">AN</div>
                         <div class="user-info">
-                            <span class="user-name" id="userName">John Doe</span>
+                            <span class="user-name" id="userName">Aristide Nna</span>
                             <span class="user-role">Administrateur</span>
                         </div>
                         <div class="user-dropdown" id="userDropdown">
+                            <a href="#tableau-de-bord" class="dashboard-nav-link"><i class="fas fa-tachometer-alt"></i> Tableau de bord</a>
                             <a href="#profile"><i class="fas fa-user"></i> Mon profil</a>
                             <a href="#settings"><i class="fas fa-cog"></i> Paramètres</a>
                             <a href="#admin" class="admin-nav" style="display: none;"><i class="fas fa-crown"></i> Administration</a>
@@ -69,59 +70,93 @@
         <div class="container">
             <h1>Collaborez efficacement en ligne</h1>
             <p>Créez des groupes de travail, gérez des tâches et communiquez avec votre équipe en temps réel. Simplifiez votre collaboration à distance.</p>
-            <a href="#groupes" class="cta-button"><i class="fas fa-rocket"></i> Commencer maintenant</a>
+            <a href="#tableau-de-bord" class="cta-button dashboard-nav-link"><i class="fas fa-rocket"></i> Commencer maintenant</a>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="features" id="fonctionnalites">
+    <!-- Dashboard Section -->
+    <section class="dashboard" id="tableau-de-bord" style="display: none;">
         <div class="container">
             <div class="section-title">
-                <h2>Fonctionnalités principales</h2>
-                <p>Découvrez comment CollabSpace peut transformer votre façon de travailler en équipe</p>
+                <h2>Tableau de bord personnel</h2>
+                <p>Suivez votre progression et gérez vos activités</p>
             </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-layer-group"></i>
+            <div class="dashboard-grid">
+                <div class="dashboard-sidebar">
+                    <div class="user-card">
+                        <div class="user-card-avatar" id="dashboardUserAvatar">Nna</div>
+                        <h3 id="dashboardUserName">Aristide Nna</h3>
+                        <p id="dashboardUserRole">Administrateur</p>
                     </div>
-                    <h3>Gestion de groupes</h3>
-                    <p>Créez et gérez facilement vos groupes de travail avec des paramètres personnalisables.</p>
+                    <ul class="dashboard-nav">
+                        <li><a href="#progression" class="dashboard-tab-link active"><i class="fas fa-chart-line"></i> Progression</a></li>
+                        <li><a href="#mes-taches" class="dashboard-tab-link"><i class="fas fa-tasks"></i> Mes tâches</a></li>
+                        <li><a href="#mes-invitations" class="dashboard-tab-link"><i class="fas fa-envelope"></i> Mes invitations</a></li>
+                        <li><a href="#statistiques" class="dashboard-tab-link"><i class="fas fa-chart-bar"></i> Statistiques</a></li>
+                    </ul>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-tasks"></i>
+                <div class="dashboard-content">
+                    <!-- Progression Tab -->
+                    <div class="dashboard-tab active" id="progression">
+                        <h3>Votre progression</h3>
+                        <div class="progress-stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalTasks">12</div>
+                                <div>Tâches totales</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="completedTasks">8</div>
+                                <div>Tâches terminées</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="completionRate">67%</div>
+                                <div>Taux de completion</div>
+                            </div>
+                        </div>
+                        <h4>Progression par groupe</h4>
+                        <div id="groupProgress">
+                            <!-- Group progress will be populated by JavaScript -->
+                        </div>
                     </div>
-                    <h3>Liste de tâches</h3>
-                    <p>Assignez des tâches, suivez leur progression et collaborez sur les projets en cours.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-comments"></i>
+                    
+                    <!-- Mes Tâches Tab -->
+                    <div class="dashboard-tab" id="mes-taches">
+                        <h3>Mes tâches</h3>
+                        <ul class="task-list" id="userTasksList">
+                            <!-- User tasks will be populated by JavaScript -->
+                        </ul>
                     </div>
-                    <h3>Messagerie intégrée</h3>
-                    <p>Communiquez en temps réel avec les membres de votre groupe grâce à notre système de chat.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-file-upload"></i>
+                    
+                    <!-- Mes Invitations Tab -->
+                    <div class="dashboard-tab" id="mes-invitations">
+                        <h3>Mes invitations</h3>
+                        <ul class="invitation-list" id="userInvitationsList">
+                            <!-- User invitations will be populated by JavaScript -->
+                        </ul>
                     </div>
-                    <h3>Partage de fichiers</h3>
-                    <p>Partagez et organisez vos documents, images et autres fichiers avec votre équipe.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-calendar-alt"></i>
+                    
+                    <!-- Statistiques Tab -->
+                    <div class="dashboard-tab" id="statistiques">
+                        <h3>Statistiques personnelles</h3>
+                        <div class="progress-stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="groupsCount">3</div>
+                                <div>Groupes actifs</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="messagesSent">42</div>
+                                <div>Messages envoyés</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="filesUploaded">7</div>
+                                <div>Fichiers partagés</div>
+                            </div>
+                        </div>
+                        <h4>Activité récente</h4>
+                        <div id="recentActivity">
+                            <!-- Recent activity will be populated by JavaScript -->
+                        </div>
                     </div>
-                    <h3>Calendrier partagé</h3>
-                    <p>Planifiez des réunions, des échéances et suivez les événements importants de votre projet.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>Sécurité des données</h3>
-                    <p>Vos données sont cryptées et sauvegardées régulièrement pour une sécurité maximale.</p>
                 </div>
             </div>
         </div>
@@ -138,50 +173,15 @@
                 <div class="groups-sidebar">
                     <h3>Mes groupes</h3>
                     <ul class="group-list" id="groupList">
-                        <li class="active" data-group="projet-alpha">
-                            <div>
-                                <i class="fas fa-project-diagram"></i> Projet Alpha
-                            </div>
-                            <div class="group-actions">
-                                <button class="group-action-btn" title="Modifier"><i class="fas fa-edit"></i></button>
-                                <button class="group-action-btn" title="Supprimer"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </li>
-                        <li data-group="equipe-marketing">
-                            <div>
-                                <i class="fas fa-chart-line"></i> Équipe Marketing
-                            </div>
-                            <div class="group-actions">
-                                <button class="group-action-btn" title="Modifier"><i class="fas fa-edit"></i></button>
-                                <button class="group-action-btn" title="Supprimer"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </li>
-                        <li data-group="developpeurs-web">
-                            <div>
-                                <i class="fas fa-code"></i> Développeurs Web
-                            </div>
-                            <div class="group-actions">
-                                <button class="group-action-btn" title="Modifier"><i class="fas fa-edit"></i></button>
-                                <button class="group-action-btn" title="Supprimer"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </li>
-                        <li data-group="designers-ux">
-                            <div>
-                                <i class="fas fa-palette"></i> Designers UX/UI
-                            </div>
-                            <div class="group-actions">
-                                <button class="group-action-btn" title="Modifier"><i class="fas fa-edit"></i></button>
-                                <button class="group-action-btn" title="Supprimer"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </li>
+                        <!-- Groups will be populated by JavaScript -->
                     </ul>
                     <button class="create-group-btn" id="createGroupBtn"><i class="fas fa-plus"></i> Créer un groupe</button>
                 </div>
                 <div class="group-content">
                     <div class="group-header">
-                        <h2 id="groupTitle">Projet Alpha</h2>
+                        <h2 id="groupTitle">Sélectionnez un groupe</h2>
                         <div class="group-members">
-                            <span><i class="fas fa-users"></i> <span id="memberCount">8</span> membres</span>
+                            <span><i class="fas fa-users"></i> <span id="memberCount">0</span> membres</span>
                         </div>
                     </div>
                     <div class="group-tabs">
@@ -196,38 +196,8 @@
                     <!-- Tâches Tab -->
                     <div class="tab-content active" id="tasks">
                         <h3>Tâches du groupe</h3>
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox">
-                            <div class="task-info">
-                                <h4>Concevoir la maquette</h4>
-                                <p>Assignée à: Mbewekam Gaelle • Échéance: 15/06/2023 • Priorité: Élevée</p>
-                            </div>
-                            <div class="task-actions">
-                                <button title="Modifier"><i class="fas fa-edit"></i></button>
-                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox" checked>
-                            <div class="task-info">
-                                <h4>Rédiger le cahier des charges</h4>
-                                <p>Assignée à: Aristide Nna • Terminée</p>
-                            </div>
-                            <div class="task-actions">
-                                <button title="Modifier"><i class="fas fa-edit"></i></button>
-                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                        <div class="task-item">
-                            <input type="checkbox" class="task-checkbox">
-                            <div class="task-info">
-                                <h4>Développer le module d'authentification</h4>
-                                <p>Assignée à: Massayo Darille • Échéance: 20/06/2023 • Priorité: Moyenne</p>
-                            </div>
-                            <div class="task-actions">
-                                <button title="Modifier"><i class="fas fa-edit"></i></button>
-                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
-                            </div>
+                        <div id="groupTasksList">
+                            <!-- Group tasks will be populated by JavaScript -->
                         </div>
                         <div class="add-item-form">
                             <input type="text" placeholder="Ajouter une nouvelle tâche..." id="newTaskInput">
@@ -238,23 +208,8 @@
                     <!-- Messages Tab -->
                     <div class="tab-content" id="messages">
                         <h3>Messages du groupe</h3>
-                        <div class="message-item">
-                            <div class="message-info">
-                                <h4>Mbewekam Gaelle <span>10:25</span></h4>
-                                <p>J'ai terminé la première version de la maquette. Pouvez-vous la vérifier?</p>
-                            </div>
-                        </div>
-                        <div class="message-item">
-                            <div class="message-info">
-                                <h4>Aristide Nna <span>09:45</span></h4>
-                                <p>La réunion de suivi est prévue pour demain à 14h. N'oubliez pas!</p>
-                            </div>
-                        </div>
-                        <div class="message-item">
-                            <div class="message-info">
-                                <h4>Massayo Darille <span>Hier, 16:30</span></h4>
-                                <p>J'ai rencontré un problème avec l'API. Quelqu'un peut m'aider?</p>
-                            </div>
+                        <div id="groupMessagesList">
+                            <!-- Group messages will be populated by JavaScript -->
                         </div>
                         <div class="add-item-form">
                             <textarea placeholder="Écrire un message..." id="newMessageInput" rows="2"></textarea>
@@ -265,38 +220,8 @@
                     <!-- Fichiers Tab -->
                     <div class="tab-content" id="files">
                         <h3>Fichiers partagés</h3>
-                        <div class="file-item">
-                            <i class="fas fa-file-pdf" style="color: #e74c3c; font-size: 1.5rem; margin-right: 15px;"></i>
-                            <div class="file-info">
-                                <h4>Cahier des charges.pdf</h4>
-                                <p>Ajouté par: Aristide Nna • 12/05/2023 • 2.4 MB</p>
-                            </div>
-                            <div class="file-actions">
-                                <button title="Télécharger"><i class="fas fa-download"></i></button>
-                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                        <div class="file-item">
-                            <i class="fas fa-file-image" style="color: #3498db; font-size: 1.5rem; margin-right: 15px;"></i>
-                            <div class="file-info">
-                                <h4>Maquette-v1.png</h4>
-                                <p>Ajouté par: Mbewekam Gaelle • 10/05/2023 • 1.8 MB</p>
-                            </div>
-                            <div class="file-actions">
-                                <button title="Télécharger"><i class="fas fa-download"></i></button>
-                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </div>
-                        <div class="file-item">
-                            <i class="fas fa-file-code" style="color: #f39c12; font-size: 1.5rem; margin-right: 15px;"></i>
-                            <div class="file-info">
-                                <h4>script-authentification.js</h4>
-                                <p>Ajouté par: Masssayo Darille • 08/05/2023 • 156 KB</p>
-                            </div>
-                            <div class="file-actions">
-                                <button title="Télécharger"><i class="fas fa-download"></i></button>
-                                <button title="Supprimer"><i class="fas fa-trash"></i></button>
-                            </div>
+                        <div id="groupFilesList">
+                            <!-- Group files will be populated by JavaScript -->
                         </div>
                         <div class="add-item-form">
                             <input type="file" id="fileUpload">
@@ -306,74 +231,19 @@
                     
                     <!-- Calendrier Tab -->
                     <div class="tab-content" id="calendar">
-                        <h3>Calendrier du groupe - Juin 2023</h3>
-                        <div class="calendar">
-                            <div class="calendar-header">Lun</div>
-                            <div class="calendar-header">Mar</div>
-                            <div class="calendar-header">Mer</div>
-                            <div class="calendar-header">Jeu</div>
-                            <div class="calendar-header">Ven</div>
-                            <div class="calendar-header">Sam</div>
-                            <div class="calendar-header">Dim</div>
-                            
-                            <!-- Days will be populated by JavaScript -->
-                        </div>
-                        <div style="margin-top: 20px;">
-                            <h4>Événements à venir</h4>
-                            <ul>
-                                <li>15 juin - Échéance: Maquette finale</li>
-                                <li>20 juin - Réunion d'équipe</li>
-                                <li>25 juin - Présentation client</li>
-                            </ul>
+                        <h3>Calendrier du groupe</h3>
+                        <div class="calendar" id="groupCalendar">
+                            <!-- Calendar will be populated by JavaScript -->
                         </div>
                     </div>
                     
                     <!-- Membres Tab -->
                     <div class="tab-content" id="members">
                         <h3>Membres du groupe</h3>
-                        <div class="members-list">
-                            <div class="member-card">
-                                <div class="member-avatar">AN</div>
-                                <span class="member-role">Admin</span>
-                                <h4>Aristide Nna</h4>
-                                <p>aristidenna@gmail.com</p>
-                                <div class="member-actions">
-                                    <button class="btn btn-sm btn-primary"><i class="fas fa-envelope"></i></button>
-                                    <button class="btn btn-sm btn-danger"><i class="fas fa-user-times"></i></button>
-                                </div>
-                            </div>
-                            <div class="member-card">
-                                <div class="member-avatar">MG</div>
-                                <span class="member-role">Membre</span>
-                                <h4>Mbewekam Gaelle</h4>
-                                <p>gaellembewekam@gmail.com</p>
-                                <div class="member-actions">
-                                    <button class="btn btn-sm btn-primary"><i class="fas fa-envelope"></i></button>
-                                    <button class="btn btn-sm btn-danger"><i class="fas fa-user-times"></i></button>
-                                </div>
-                            </div>
-                            <div class="member-card">
-                                <div class="member-avatar">MD</div>
-                                <span class="member-role">Membre</span>
-                                <h4>Massayo Darille</h4>
-                                <p>massayodarille@gmail.com</p>
-                                <div class="member-actions">
-                                    <button class="btn btn-sm btn-primary"><i class="fas fa-envelope"></i></button>
-                                    <button class="btn btn-sm btn-danger"><i class="fas fa-user-times"></i></button>
-                                </div>
-                            </div>
-                            <div class="member-card">
-                                <div class="member-avatar">AH</div>
-                                <span class="member-role">Membre</span>
-                                <h4>Hamidou Aboubakar</h4>
-                                <p>aboubakarhamidou@gmail.com</p>
-                                <div class="member-actions">
-                                    <button class="btn btn-sm btn-primary"><i class="fas fa-envelope"></i></button>
-                                    <button class="btn btn-sm btn-danger"><i class="fas fa-user-times"></i></button>
-                                </div>
-                            </div>
+                        <div class="members-list" id="groupMembersList">
+                            <!-- Group members will be populated by JavaScript -->
                         </div>
-                        <button class="btn btn-primary" style="margin-top: 20px;"><i class="fas fa-user-plus"></i> Inviter un membre</button>
+                        <button class="btn btn-primary" id="inviteMemberBtn" style="margin-top: 20px;"><i class="fas fa-user-plus"></i> Inviter un membre</button>
                     </div>
                     
                     <!-- Paramètres Tab -->
@@ -382,11 +252,11 @@
                         <div class="form-group">
                             <label for="groupName"><i class="fas fa-signature"></i> Nom du groupe</label>
                             <i class="fas fa-pen input-icon"></i>
-                            <input type="text" id="groupName" value="Projet Alpha">
+                            <input type="text" id="groupName" value="">
                         </div>
                         <div class="form-group">
                             <label for="groupDescription"><i class="fas fa-align-left"></i> Description</label>
-                            <textarea id="groupDescription" rows="3">Groupe de travail pour le développement du projet Alpha</textarea>
+                            <textarea id="groupDescription" rows="3"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="groupVisibility"><i class="fas fa-eye"></i> Visibilité</label>
@@ -407,7 +277,7 @@
                         </div>
                         <div class="form-actions">
                             <button class="btn btn-secondary"><i class="fas fa-times"></i> Annuler</button>
-                            <button class="btn btn-primary"><i class="fas fa-save"></i> Enregistrer</button>
+                            <button class="btn btn-primary" id="saveGroupSettings"><i class="fas fa-save"></i> Enregistrer</button>
                         </div>
                     </div>
                 </div>
@@ -427,6 +297,7 @@
                     <button class="admin-tab active" data-tab="admin-dashboard"><i class="fas fa-tachometer-alt"></i> Tableau de bord</button>
                     <button class="admin-tab" data-tab="admin-users"><i class="fas fa-users"></i> Utilisateurs</button>
                     <button class="admin-tab" data-tab="admin-groups"><i class="fas fa-layer-group"></i> Groupes</button>
+                    <button class="admin-tab" data-tab="admin-invitations"><i class="fas fa-envelope"></i> Invitations</button>
                     <button class="admin-tab" data-tab="admin-system"><i class="fas fa-cog"></i> Système</button>
                 </div>
                 <div class="admin-tab-content active" id="admin-dashboard">
@@ -459,25 +330,8 @@
                                 <th>Statut</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Mbewekam Gaelle</td>
-                                <td>Création d'un groupe</td>
-                                <td>10/06/2023 14:30</td>
-                                <td><span class="status-badge status-active">Réussi</span></td>
-                            </tr>
-                            <tr>
-                                <td>Aristide Nna</td>
-                                <td>Modification de profil</td>
-                                <td>09/06/2023 09:15</td>
-                                <td><span class="status-badge status-active">Réussi</span></td>
-                            </tr>
-                            <tr>
-                                <td>Massayo Darille</td>
-                                <td>Téléversement de fichier</td>
-                                <td>08/06/2023 16:45</td>
-                                <td><span class="status-badge status-inactive">Échec</span></td>
-                            </tr>
+                        <tbody id="adminActivityTable">
+                            <!-- Admin activity will be populated by JavaScript -->
                         </tbody>
                     </table>
                 </div>
@@ -497,46 +351,8 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Aristide Nna</td>
-                                <td>aristidenna@gmail.com</td>
-                                <td>Administrateur</td>
-                                <td>15/03/2023</td>
-                                <td><span class="status-badge status-active">Actif</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Mbewekam Gaelle</td>
-                                <td> gaellembewekam@gmail.com</td>
-                                <td>Utilisateur</td>
-                                <td>22/04/2023</td>
-                                <td><span class="status-badge status-active">Actif</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Massayo Darille</td>
-                                <td>massayodarille@gmail.com</td>
-                                <td>Utilisateur</td>
-                                <td>05/05/2023</td>
-                                <td><span class="status-badge status-inactive">Inactif</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tbody id="adminUsersTable">
+                            <!-- Admin users will be populated by JavaScript -->
                         </tbody>
                     </table>
                 </div>
@@ -553,33 +369,26 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="adminGroupsTable">
+                            <!-- Admin groups will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="admin-tab-content" id="admin-invitations">
+                    <h3>Gestion des invitations</h3>
+                    <table class="admin-table">
+                        <thead>
                             <tr>
-                                <td>Projet Alpha</td>
-                                <td>Aristide Nna</td>
-                                <td>8</td>
-                                <td>10/05/2023</td>
-                                <td><span class="status-badge status-active">Actif</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </td>
+                                <th>Inviteur</th>
+                                <th>Invité</th>
+                                <th>Groupe</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
                             </tr>
-                            <tr>
-                                <td>Équipe Marketing</td>
-                                <td>Saidou tupac</td>
-                                <td>5</td>
-                                <td>15/05/2023</td>
-                                <td><span class="status-badge status-active">Actif</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
-                                        <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+                        </thead>
+                        <tbody id="adminInvitationsTable">
+                            <!-- Admin invitations will be populated by JavaScript -->
                         </tbody>
                     </table>
                 </div>
@@ -598,7 +407,7 @@
                         <select id="system-language">
                             <option value="fr" selected>Français</option>
                             <option value="en">English</option>
-                            <option value="es">Español</option>
+                            <option value="es">Japonais</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -630,7 +439,7 @@
                     <h3>Liens rapides</h3>
                     <ul class="footer-links">
                         <li><a href="#accueil"><i class="fas fa-chevron-right"></i> Accueil</a></li>
-                        <li><a href="#fonctionnalites"><i class="fas fa-chevron-right"></i> Fonctionnalités</a></li>
+                        <li><a href="#tableau-de-bord" class="dashboard-nav-link"><i class="fas fa-chevron-right"></i> Tableau de bord</a></li>
                         <li><a href="#groupes"><i class="fas fa-chevron-right"></i> Groupes</a></li>
                         <li><a href="#"><i class="fas fa-chevron-right"></i> Tarifs</a></li>
                     </ul>
@@ -754,6 +563,31 @@
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary close-modal"><i class="fas fa-times"></i> Annuler</button>
                     <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Créer le groupe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="inviteMemberModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-plus"></i> Inviter un membre</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="inviteMemberForm">
+                <div class="form-group">
+                    <label for="inviteeEmail"><i class="fas fa-envelope"></i> Email de l'invité</label>
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="inviteeEmail" required>
+                    <div class="error-message" id="inviteeEmailError">Veuillez entrer une adresse email valide</div>
+                </div>
+                <div class="form-group">
+                    <label for="invitationMessage"><i class="fas fa-comment"></i> Message d'invitation (optionnel)</label>
+                    <textarea id="invitationMessage" rows="3" placeholder="Personnalisez votre message d'invitation..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary close-modal"><i class="fas fa-times"></i> Annuler</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Envoyer l'invitation</button>
                 </div>
             </form>
         </div>
